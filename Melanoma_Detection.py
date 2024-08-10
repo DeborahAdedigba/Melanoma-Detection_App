@@ -24,6 +24,57 @@ import yaml
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
+# Set page configuration
+st.set_page_config(page_title="Melanoma Detection App", page_icon="🔬", layout="wide")
+
+# # Define custom CSS for background image
+# st.markdown(
+#     """
+#     <style>
+#     .stApp {
+#         background-image: url('https://i.pinimg.com/originals/4c/98/4e/4c984ef0291409fef0a0942b391f6287.jpg');
+#         background-size: cover;
+#         background-repeat: no-repeat;
+#         background-attachment: fixed;
+#         background-position: center;
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
+# Define custom CSS for background image and sidebar color
+st.markdown(
+    """
+    <style>
+    /* Set the main background image for the app */
+    .stApp {
+        background-image: url('https://i.pinimg.com/originals/4c/98/4e/4c984ef0291409fef0a0942b391f6287.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+    }
+    
+    /* Custom sidebar background color */
+    [data-testid="stSidebar"] {
+        background-color: #5F9EA0 !important; /* Mint green color */
+    }
+
+    /* Optional: Custom sidebar header color */
+    [data-testid="stSidebarHeader"] {
+        background-color: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent background */
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Optional: Custom sidebar content color */
+    [data-testid="stSidebarContent"] {
+        background-color: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent background */
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 # CNN
@@ -375,15 +426,26 @@ def melanoma_detection():
             st.error(f"Error during prediction: {e}")
     else:
         st.write("Please upload an image.")
+    st.write("")    
+    st.markdown(disclaimer_text_model, unsafe_allow_html=True)
+    st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
 
 
 
 
 # Disclaimer text
-disclaimer_text = """
-**Disclaimer:** This app is for educational purposes only. Consult a healthcare professional for accurate medical advice.
+disclaimer_text_model = """
+    <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; border: 1px solid #f5c6cb;">
+        <strong>Disclaimer:</strong> This app is for educational purposes only. Consult a healthcare professional for accurate medical advice.
+    </div>
 """
+
+disclaimer_text = """
+    <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; border: 1px solid #f5c6cb;">
+        <strong>Warning:</strong> Please ensure that you understand the implications of using these models. Model performance can vary based on various factors.
+    </div>
+    """
 
 # Main page - Introduction about Melanoma and the App
 def main():
@@ -406,6 +468,23 @@ def main():
 
         We hope this app will be a valuable resource in your journey to learn about and detect melanoma. Let's get started!
     """)
+
+    # Melanoma description and image
+    st.markdown("""
+        ## Understanding Melanoma
+
+        Melanoma is a type of skin cancer that begins in melanocytes, the cells responsible for producing pigment in the skin. It is characterized by the uncontrolled growth of these cells, which can form tumors. Melanoma can occur in the skin, as well as in other parts of the body where pigment-producing cells are present.
+
+        Early detection is crucial for successful treatment and a better prognosis. Melanoma is often identified by changes in the appearance of moles or skin lesions. The stages of melanoma range from stage 0, where the cancer is confined to the outer layer of the skin, to stage 4, where the cancer has spread to distant organs.
+
+        Here is an image illustrating the different stages of melanoma:
+    """)
+    
+    # Image URL
+    melanoma_image_url = "https://www.aimatmelanoma.org/wp-content/uploads/Blue-Greyscale-Volleyball-Quote-UAAPNCAA-Facebook-Cover.jpg"
+
+    # Display the image
+    st.image(melanoma_image_url, use_column_width=True)
 
 
 
@@ -442,19 +521,34 @@ def display_confusion_matrix(confusion_matrices, model_type, model_name):
         else:  # Skin Image Models
             labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
         
+        # Convert confusion matrix to DataFrame for better handling with Plotly
         df_cm = pd.DataFrame(matrix, index=labels, columns=labels)
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(df_cm, annot=True, fmt='d', cmap='Blues')
-        plt.title(f'Confusion Matrix for {model_name} ({model_type.capitalize()})')
-        plt.ylabel('Actual')
-        plt.xlabel('Predicted')
-        st.pyplot(plt)
+        
+        # Create a Plotly heatmap
+        fig = go.Figure(data=go.Heatmap(
+            z=df_cm.values,
+            x=df_cm.columns,
+            y=df_cm.index,
+            colorscale='Blues',
+            colorbar=dict(title='Count'),
+            zmin=0,
+            zmax=df_cm.values.max()
+        ))
+        
+        fig.update_layout(
+            title=f'Confusion Matrix for {model_name} ({model_type.capitalize()})',
+            xaxis_title='Predicted Label',
+            yaxis_title='True Label',
+            xaxis=dict(tickmode='array', tickvals=list(df_cm.columns), ticktext=df_cm.columns),
+            yaxis=dict(tickmode='array', tickvals=list(df_cm.index), ticktext=df_cm.index)
+        )
+        
+        st.plotly_chart(fig)
 
         st.write(f"The confusion matrix above shows the performance of the {model_name} model for {model_type.capitalize()} classification.")
         st.write(f"The diagonal elements represent the number of correct predictions, while the off-diagonals represent the number of incorrect predictions.")
     else:
         st.write(f"No confusion matrix available for {model_name} in {model_type}.")
-
 # Confusion matrices for models
 confusion_matrices = {
     'dermoscopy': {
@@ -518,10 +612,9 @@ import numpy as np
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
 
-def plot_roc_curve(model, model_name, num_classes):
-    # Generate random sample data
+def plot_roc_curve(model, model_name, num_classes, input_size):
+    # Generate random sample data with the correct input size
     num_samples = 100
-    input_size = (224, 224, 6)
     X_sample = np.random.rand(num_samples, *input_size).astype(np.float32)
     y_sample = np.random.randint(0, num_classes, size=(num_samples,))
     
@@ -586,7 +679,7 @@ def model_performance_page():
         'InceptionResNetV2': "Combines the Inception architecture with residual connections for enhanced performance."
     }
 
-    st.title("Model Performance")
+    
 
     # Model selection
     model_type = st.sidebar.selectbox('Select Model Type', ['Skin Image Models', 'Dermoscopy Image Models'])
@@ -617,14 +710,29 @@ def model_performance_page():
         st.header(f"ROC Curve for {model_name}")
         model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
         num_classes = 6 if model_type == 'Skin Image Models' else 2
-        fig = plot_roc_curve(model, model_name, num_classes)
-        st.plotly_chart(fig)
 
+        # Define the correct input size based on the model
+        if model_name == 'InceptionResNetV2':
+            input_size = (299, 299, 6)
+        elif model_name == 'EfficientNetB4':
+            input_size = (380, 380, 6)
+        else:
+            input_size = (224, 224, 6)
+
+        fig = plot_roc_curve(model, model_name, num_classes, input_size)
+        st.plotly_chart(fig)
+        
+    st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
 
 
 
 # plotting the visualization from the metadata
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import streamlit as st
+
 def visualize_data():
     st.title('Visualizations')
     st.markdown("""
@@ -633,7 +741,6 @@ def visualize_data():
         
         You can switch between visualizations for skin images and dermoscopy images using the sidebar selection.
     """)
-
 
     # Load datasets
     df = pd.read_csv('C:/Users/adedi/OneDrive - Solent University/Diss/Dissertation/Dataset/Source_2/metadata.csv')
@@ -644,55 +751,41 @@ def visualize_data():
 
     if visualization_type == 'Skin':
         # Skin Visualizations
-        # Count plot for diagnostic
-        plt.figure(figsize=(8, 6))
-        sns.countplot(data=df, x='diagnostic')
-        plt.title('Diagnostic Distribution for PH2 Dataset')
-        plt.xlabel('Diagnostic')
-        plt.ylabel('Count')
 
-        # Annotate counts on bars
-        for p in plt.gca().patches:
-            plt.gca().annotate(f"{p.get_height()}", (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-        st.pyplot(plt.gcf())
+        # Diagnostic Distribution
+        st.subheader('Diagnostic Distribution for PH2 Dataset')
+        fig_diag = px.histogram(df, x='diagnostic', title='Diagnostic Distribution', labels={'diagnostic': 'Diagnostic'})
+        fig_diag.update_layout(xaxis_title='Diagnostic', yaxis_title='Count')
+        st.plotly_chart(fig_diag)
 
-        # Count plot for gender
-        plt.figure(figsize=(8, 6))
-        sns.countplot(data=df, x='gender', hue='diagnostic')
-        plt.title('Diagnostic Distribution by Gender for PH2 Dataset')
-        plt.xlabel('Gender')
-        plt.ylabel('Count')
-        plt.legend(title='Diagnostic')
-
-       
-        # Annotate counts on bars
-        for p in plt.gca().artists:
-            p.set_edgecolor('k')  # set edge color for better visibility
-            plt.gca().annotate(f"{p.get_height()}", (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-        st.pyplot(plt.gcf())
-
-
+        # Diagnostic Distribution by Gender
+        st.subheader('Diagnostic Distribution by Gender for PH2 Dataset')
+        fig_gender = px.histogram(df, x='gender', color='diagnostic', barmode='group', title='Diagnostic Distribution by Gender')
+        fig_gender.update_layout(xaxis_title='Gender', yaxis_title='Count', legend_title='Diagnostic')
+        st.plotly_chart(fig_gender)
 
         # Box plot for age by diagnostic
-        fig = px.box(df, x='diagnostic', y='age', title='Age Distribution by Diagnostic for PH2 Dataset')
-        st.plotly_chart(fig)
+        st.subheader('Age Distribution by Diagnostic for PH2 Dataset')
+        fig_age = px.box(df, x='diagnostic', y='age', title='Age Distribution by Diagnostic', labels={'diagnostic': 'Diagnostic', 'age': 'Age'})
+        st.plotly_chart(fig_age)
 
     elif visualization_type == 'Dermoscopy':
         # Dermoscopy Visualizations
-        # Count plot for label
-        plt.figure(figsize=(8, 6))
-        sns.countplot(data=df2, x='Label', order=df2['Label'].value_counts().index)
-        plt.title('Distribution of Labels for ISIC2016 Dataset')
-        plt.xlabel('Label')
-        plt.ylabel('Count')
 
-        # Annotate counts on bars
-        for p in plt.gca().patches:
-            plt.gca().annotate(f"{p.get_height()}", (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 5), textcoords='offset points')
-        st.pyplot(plt.gcf())
+        # Pie chart for label distribution
+        st.subheader('Distribution of Labels for ISIC2016 Dataset')
+        label_counts = df2['Label'].value_counts()
+        labels = label_counts.index
+        sizes = label_counts.values
 
+        fig_pie = go.Figure(data=[go.Pie(labels=labels, values=sizes, hole=0.3)])
+        fig_pie.update_layout(title='Label Distribution', legend_title='Labels')
+        st.plotly_chart(fig_pie)
         
+    st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
+
+    
 
 
 # Educational resources section
@@ -745,14 +838,80 @@ def faq_section():
     """)
 
 # Feedback and contact form
+# Function to send feedback via email
+def send_email(name, email, message):
+    sender_email = "debbydawn16@gmail.com"  # Replace with your Gmail address
+    sender_password = "fcgd zzhr szgf izia"  # Replace with your app password
+
+    recipient_email = "debbydawn16@gmail.com"
+    
+    subject = "New Feedback from Melanoma Detection App"
+    
+    # Create the email body
+    body = f"""
+    You have received a new feedback message:
+
+    Name: {name}
+    Email: {email}
+    Message: {message}
+    """
+
+    # Set up the MIME
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Establish a secure session with Gmail's outgoing SMTP server using your Gmail account
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()  # Use TLS to add security
+        server.login(sender_email, sender_password)
+        
+        # Send email
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+        server.close()
+
+        st.success("Your message has been sent successfully!")
+    except Exception as e:
+        st.error(f"Failed to send email: {e}")
+
+# Feedback form
 def feedback_form():
     st.title('Feedback and Contact')
-    st.write("If you have any feedback, questions, or need support, please don't hesitate to reach out to us at 2adedd38@solent.ac.uk. We're here to help and improve the Melanoma Detection App.")
+    st.write("If you have any feedback, questions, or need support, please don't hesitate to reach out to us.")
+
+    # Form input fields
+    with st.form(key='feedback_form'):
+        name = st.text_input('Name')
+        email = st.text_input('Email')
+        message = st.text_area('Message')
+
+        # Submit button
+        submit_button = st.form_submit_button(label='Submit')
+
+    # Process the feedback form
+    if submit_button:
+        if not name or not email or not message:
+            st.error("Please fill out all fields.")
+        else:
+            send_email(name, email, message)
+            
 
 # Combine all pages into a single app
 def run_app():
-    st.set_page_config(page_title="Melanoma Detection App", page_icon="🔬", layout="wide")
+    # st.set_page_config(page_title="Melanoma Detection App", page_icon="🔬", layout="wide")
     
+    # Define the image URL
+    sidebar_image_url = "https://students.solent.ac.uk/static/assets/icons/svg/logo/logo-solent.svg"
+
+    # Add the image to the sidebar
+    st.sidebar.markdown(f"""
+    <div style="text-align: left;">
+        <img src="{sidebar_image_url}" alt="Solent University Logo" style="width: 100%; max-width: 200px;"/>
+    </div>
+    """, unsafe_allow_html=True)
     st.sidebar.title('Navigation')
     pages = {
         "Introduction": main,
@@ -766,8 +925,6 @@ def run_app():
 
     selection = st.sidebar.radio("Go to", list(pages.keys()))
     pages[selection]()
-
-    st.sidebar.markdown(disclaimer_text)
-
+    
 if __name__ == '__main__':
     run_app()
