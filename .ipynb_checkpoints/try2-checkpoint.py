@@ -369,23 +369,31 @@ disclaimer_text = """
 # Main page - Introduction about Melanoma and the App
 def main():
     st.title('Melanoma Detection App')
-    st.markdown('''
-        This app helps detect melanoma using AI models. Melanoma is a type of skin cancer.
-        The app includes:
-        - Information about melanoma
-        - Model selection and performance
-        - Visualizations
-        - Detection using skin or dermoscopy images
-        - Educational resources
-        - FAQs
-        - Feedback and contact
-    ''')
+    st.markdown("""
+        ## Welcome to the Melanoma Detection App!
+
+        This app is designed to help you understand and detect melanoma, a type of skin cancer. Melanoma is the most serious form of skin cancer and can be life-threatening if not detected and treated early.
+
+        Using the latest advancements in deep learning and computer vision, this app provides a platform to explore different models for melanoma detection, visualize and analyze relevant data, and learn more about this important health topic.
+
+        The key features of this app include:
+
+        - **Model Selection and Performance**: Explore the accuracy, precision, recall, and AUC of various models for both skin and dermoscopy image classification.
+        - **Visualizations**: Analyze the distribution of melanoma cases, age, and gender using interactive visualizations.
+        - **Melanoma Detection**: Upload your own skin or dermoscopy images and get a prediction on whether the lesion is malignant or benign.
+        - **Educational Resources**: Access a curated list of articles, journals, and websites to deepen your understanding of melanoma and related technologies.
+        - **FAQs**: Get answers to common questions about the app, its models, and interpreting the results.
+        - **Feedback and Contact**: Provide feedback or reach out to the app developers for support.
+
+        We hope this app will be a valuable resource in your journey to learn about and detect melanoma. Let's get started!
+    """)
 
 
 
 def display_model_summaries(models):
     for category, category_models in models.items():
         st.header(f"{category.capitalize()} Models")
+        st.write("This section provides a detailed summary of the selected model's architecture, including the number of layers, parameters, and output shapes.")
         for model_name, model in category_models.items():
             st.subheader(f"{model_name} Model Summary")
             summary_string = StringIO()
@@ -398,6 +406,7 @@ def display_model_summaries(models):
 def display_model_evaluation(metrics, model_type, model_name):
     if model_name in metrics:
         st.write(f"### Model Performance for {model_name} ({model_type})")
+        st.write("The following metrics provide an overview of the selected model's performance:")
         st.write(f"**Accuracy**: {metrics[model_name]['Accuracy']}")
         st.write(f"**Precision**: {metrics[model_name]['Precision']}")
         st.write(f"**Recall**: {metrics[model_name]['Recall']}")
@@ -493,6 +502,9 @@ def model_performance_page():
     if 'models' not in st.session_state:
         loaded_data = load_models()
         st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
+        
+    st.title("Model Performance")
+    st.markdown("This section allows you to explore the performance of various models used for melanoma detection. You can view the model summaries, evaluation metrics, and confusion matrices.")
     
     metrics_dermoscopy = {
         'CNN': {'Accuracy': '53%', 'Precision': '53%', 'Recall': '53%', 'AUC': '52%'},
@@ -532,10 +544,12 @@ def model_performance_page():
 # plotting the visualization from the metadata
 def visualize_data():
     st.title('Visualizations')
-    st.markdown('''
+    st.markdown("""
         ## Visualizations
-        Include visualizations related to melanoma detection or model performance.
-    ''')
+        This section provides interactive visualizations to help you understand the distribution of melanoma cases, age, and gender in the dataset.
+        
+        You can switch between visualizations for skin images and dermoscopy images using the sidebar selection.
+    """)
 
     # Load datasets
     df = pd.read_csv('C:/Users/adedi/OneDrive - Solent University/Diss/Dissertation/Dataset/Source_2/metadata.csv')
@@ -601,47 +615,55 @@ def visualize_data():
 def educational_resources():
     st.title('Educational Resources')
     st.markdown("""
-    ## Educational Resources for Melanoma Detection
-    
-    Here are some useful resources to deepen your understanding of melanoma detection and related technologies:
-    
-    - [Melanoma Detection with Deep Learning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6984940/): An academic article on using deep learning for melanoma detection.
-    - [Skin Cancer Foundation](https://www.skincancer.org/): Comprehensive resource on skin cancer, including melanoma.
-    - [Deep Learning for Dermatology](https://www.sciencedirect.com/science/article/pii/S0045653518300556): Review of deep learning techniques applied to dermatology.
-    - [Journal of the American Academy of Dermatology (JAAD)](https://www.jaad.org/): Leading dermatology journal with articles on melanoma and skin diseases.
-    - [Convolutional Neural Networks for Melanoma Detection](https://arxiv.org/abs/1805.06267): Research paper on applying CNNs for melanoma detection.
-    - [ISIC Archive](https://www.isic-archive.com/): A large dataset of dermatological images for training and evaluation of models.
-    - [Understanding Melanoma](https://www.cancer.gov/types/skin/melanoma): National Cancer Institute resource explaining melanoma and its treatment.
-    - [AI for Melanoma Detection](https://www.bmj.com/content/369/bmj.m1972): Article discussing the use of AI in detecting melanoma.
-""")
+        ## Educational Resources for Melanoma Detection
+        
+        In this section, you can find a curated list of resources to deepen your understanding of melanoma and the technologies used in this app for detection.
+        
+        The resources include academic articles, reputable websites, scientific journals, and research papers that cover various aspects of melanoma and deep learning for medical imaging.
+        
+        Feel free to explore these resources to learn more about this important health topic and the latest advancements in the field.
+    """)
+
+    st.markdown("""
+        - [Melanoma Detection with Deep Learning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6984940/): An academic article on using deep learning for melanoma detection.
+        - [Skin Cancer Foundation](https://www.skincancer.org/): Comprehensive resource on skin cancer, including melanoma.
+        - [Deep Learning for Dermatology](https://www.sciencedirect.com/science/article/pii/S0045653518300556): Review of deep learning techniques applied to dermatology.
+        - [Journal of the American Academy of Dermatology (JAAD)](https://www.jaad.org/): Leading dermatology journal with articles on melanoma and skin diseases.
+        - [Convolutional Neural Networks for Melanoma Detection](https://arxiv.org/abs/1805.06267): Research paper on applying CNNs for melanoma detection.
+        - [ISIC Archive](https://www.isic-archive.com/): A large dataset of dermatological images for training and evaluation of models.
+        - [Understanding Melanoma](https://www.cancer.gov/types/skin/melanoma): National Cancer Institute resource explaining melanoma and its treatment.
+        - [AI for Melanoma Detection](https://www.bmj.com/content/369/bmj.m1972): Article discussing the use of AI in detecting melanoma.
+    """)
 
 
 # FAQs section
 def faq_section():
     st.title('FAQs')
-    st.markdown('''
-        ## FAQs
+    st.markdown("""
+        ## Frequently Asked Questions
+
+        This section addresses some common questions about the Melanoma Detection App. If you have any other questions, feel free to reach out to us using the Feedback and Contact form.
 
         **Q: How accurate are the models used in this app?**
-        - A: The accuracy varies per model. Check the Model Performance page for details.
+        - A: The accuracy of the models varies, as different architectures have different performance characteristics. You can check the Model Performance page for detailed metrics on accuracy, precision, recall, and AUC for each model.
 
         **Q: Can I trust the results of this app for medical diagnosis?**
-        - A: This app is for educational purposes. Consult a healthcare professional for medical advice.
+        - A: This app is designed for educational and informational purposes only. The results should not be used as a substitute for professional medical advice. If you have any concerns about a skin lesion, please consult a qualified healthcare provider.
 
         **Q: What types of images can I upload for detection?**
-        - A: You can upload skin images or dermoscopy images.
+        - A: You can upload both skin images and dermoscopy images for melanoma detection. The app will automatically detect the image type and use the appropriate model for classification.
 
         **Q: How do I interpret the prediction results?**
-        - A: Predictions are classified as either Melanoma or Not Melanoma with an explanation provided.
+        - A: The app will classify the uploaded image as either Melanoma (Malignant) or Not Melanoma (Benign), along with a confidence score. This information is provided to help you understand the model's assessment, but should not be considered a definitive diagnosis.
 
         **Q: Is my uploaded image stored or used for other purposes?**
-        - A: No, uploaded images are only used for classification within the session and are not stored.
-    ''')
+        - A: No, your uploaded images are not stored or used for any other purpose. They are only used for the current session's classification and are not retained or shared.
+    """)
 
 # Feedback and contact form
 def feedback_form():
     st.title('Feedback and Contact')
-    st.write('Have feedback or need support? Contact us at 2adedd38@solent.ac.uk')
+    st.write("If you have any feedback, questions, or need support, please don't hesitate to reach out to us at 2adedd38@solent.ac.uk. We're here to help and improve the Melanoma Detection App.")
 
 # Combine all pages into a single app
 def run_app():
