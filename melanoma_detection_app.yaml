@@ -1,0 +1,409 @@
+app:
+  icon: "\U0001F52C"
+  layout: wide
+  title: Melanoma Detection App
+confusion_matrices:
+  derm:
+    CNN:
+    - - 84
+      - 52
+    - - 51
+      - 104
+    EfficientNetB4:
+    - - 119
+      - 17
+    - - 26
+      - 129
+    InceptionResNetV2:
+    - - 59
+      - 77
+    - - 30
+      - 125
+    ResNet50:
+    - - 106
+      - 30
+    - - 39
+      - 116
+    VGG16:
+    - - 94
+      - 42
+    - - 34
+      - 121
+  skin:
+    CNN:
+    - - 88
+      - 55
+      - 3
+      - 1
+      - 17
+      - 18
+    - - 25
+      - 125
+      - 0
+      - 3
+      - 2
+      - 7
+    - - 1
+      - 1
+      - 141
+      - 8
+      - 0
+      - 2
+    - - 1
+      - 0
+      - 0
+      - 153
+      - 0
+      - 6
+    - - 10
+      - 3
+      - 0
+      - 0
+      - 170
+      - 5
+    - - 0
+      - 0
+      - 1
+      - 5
+      - 1
+      - 162
+    EfficientNetB4:
+    - - 110
+      - 36
+      - 4
+      - 9
+      - 18
+      - 5
+    - - 30
+      - 101
+      - 1
+      - 10
+      - 16
+      - 4
+    - - 5
+      - 0
+      - 123
+      - 15
+      - 6
+      - 4
+    - - 3
+      - 9
+      - 12
+      - 117
+      - 5
+      - 14
+    - - 19
+      - 28
+      - 17
+      - 13
+      - 86
+      - 25
+    - - 18
+      - 13
+      - 13
+      - 26
+      - 12
+      - 87
+    InceptionResNetV2:
+    - - 118
+      - 24
+      - 4
+      - 4
+      - 25
+      - 7
+    - - 25
+      - 64
+      - 2
+      - 18
+      - 30
+      - 23
+    - - 4
+      - 0
+      - 98
+      - 38
+      - 0
+      - 13
+    - - 2
+      - 7
+      - 13
+      - 128
+      - 0
+      - 10
+    - - 34
+      - 37
+      - 1
+      - 10
+      - 94
+      - 12
+    - - 27
+      - 12
+      - 13
+      - 37
+      - 8
+      - 72
+    ResNet50:
+    - - 134
+      - 18
+      - 1
+      - 3
+      - 18
+      - 8
+    - - 23
+      - 104
+      - 3
+      - 6
+      - 24
+      - 2
+    - - 2
+      - 0
+      - 140
+      - 6
+      - 3
+      - 2
+    - - 1
+      - 3
+      - 1
+      - 146
+      - 2
+      - 7
+    - - 16
+      - 27
+      - 2
+      - 0
+      - 136
+      - 7
+    - - 16
+      - 4
+      - 0
+      - 15
+      - 0
+      - 134
+    VGG16:
+    - - 112
+      - 32
+      - 2
+      - 2
+      - 24
+      - 10
+    - - 27
+      - 103
+      - 1
+      - 5
+      - 17
+      - 9
+    - - 0
+      - 0
+      - 144
+      - 0
+      - 0
+      - 9
+    - - 5
+      - 3
+      - 1
+      - 138
+      - 6
+      - 7
+    - - 22
+      - 38
+      - 0
+      - 1
+      - 117
+      - 10
+    - - 21
+      - 8
+      - 5
+      - 7
+      - 3
+      - 125
+disclaimer_text: '**Disclaimer:** This app is for educational purposes only. Consult
+  a healthcare professional for accurate medical advice.'
+educational_resources:
+- title: Melanoma Detection with Deep Learning
+  url: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6984940/
+- title: Skin Cancer Foundation
+  url: https://www.skincancer.org/
+- title: Deep Learning for Dermatology
+  url: https://www.sciencedirect.com/science/article/pii/S0045653518300556
+- title: Journal of the American Academy of Dermatology (JAAD)
+  url: https://www.jaad.org/
+- title: Convolutional Neural Networks for Melanoma Detection
+  url: https://arxiv.org/abs/1805.06267
+- title: ISIC Archive
+  url: https://www.isic-archive.com/
+- title: Understanding Melanoma
+  url: https://www.cancer.gov/types/skin/melanoma
+- title: AI for Melanoma Detection
+  url: https://www.bmj.com/content/369/bmj.m1972
+faqs:
+- answer: The accuracy of the models varies. For example, EfficientNetB4 has the highest
+    accuracy of 85% for dermoscopic images, while ResNet50 has 79% accuracy for skin
+    lesions. Check the Model Performance page for detailed metrics.
+  question: How accurate are the models used in this app?
+- answer: This app is intended for educational and informational purposes only. For
+    accurate medical diagnosis, consult a healthcare professional.
+  question: Can I trust the results of this app for medical diagnosis?
+- answer: You can upload both skin images and dermoscopic images. The app will automatically
+    select the appropriate model for analysis.
+  question: What types of images can I upload for detection?
+- answer: The app provides a classification of either Melanoma (Malignant) or Not
+    Melanoma (Benign) with a confidence score indicating the model's certainty.
+  question: How do I interpret the prediction results?
+- answer: No, your images are only used for the current session and are not stored
+    or used for any other purpose.
+  question: Is my uploaded image stored or used for other purposes?
+metrics:
+  derm:
+    CNN:
+      AUC: 52%
+      Accuracy: 53%
+      Precision: 53%
+      Recall: 53%
+    EfficientNetB4:
+      AUC: 95%
+      Accuracy: 85%
+      Precision: 85%
+      Recall: 85%
+    InceptionResNetV2:
+      AUC: 64%
+      Accuracy: 60%
+      Precision: 60%
+      Recall: 60%
+    ResNet50:
+      AUC: 84%
+      Accuracy: 75%
+      Precision: 75%
+      Recall: 75%
+    VGG16:
+      AUC: 83%
+      Accuracy: 74%
+      Precision: 74%
+      Recall: 74%
+  skin:
+    CNN:
+      AUC: 96%
+      Accuracy: 75%
+      Precision: 95%
+      Recall: 44%
+    EfficientNetB4:
+      AUC: 89%
+      Accuracy: 61%
+      Precision: 70%
+      Recall: 50%
+    InceptionResNetV2:
+      AUC: 96%
+      Accuracy: 57%
+      Precision: 95%
+      Recall: 44%
+    ResNet50:
+      AUC: 97%
+      Accuracy: 79%
+      Precision: 84%
+      Recall: 76%
+    VGG16:
+      AUC: 95%
+      Accuracy: 74%
+      Precision: 82%
+      Recall: 66%
+models:
+  derm:
+    CNN:
+      description: Custom CNN model for dermoscopy images with saliency.
+      path: DM_melanoma_cnn_with_saliency.keras
+    EfficientNetB4:
+      description: EfficientNetB4 model with saliency for dermoscopy images.
+      path: DM_efficientnetb4_model_with_saliency.keras
+    InceptionResNetV2:
+      description: InceptionResNetV2 model for dermoscopy images.
+      path: DM_InceptionResNetV2_model.keras
+    ResNet50:
+      description: ResNet50 model for dermoscopy images.
+      path: DM_best_ResNet50_model.keras
+    VGG16:
+      description: VGG16 model with saliency for dermoscopy images.
+      path: DM_vgg16_model_with_saliency.keras
+  skin:
+    CNN:
+      description: CNN model for skin lesions classification.
+      path: CNN_skin_classifier_weights.weights.h5
+    EfficientNetB4:
+      description: EfficientNetB4 model for skin lesions classification.
+      path: best_EfficientNetB4_weights.weights.h5
+    InceptionResNetV2:
+      description: InceptionResNetV2 model for skin lesions classification.
+      path: best_InceptionResNetV2_weights.weights.h5
+    ResNet50:
+      description: ResNet50 model for skin lesions classification.
+      path: best_ResNet50_weights.weights.h5
+    VGG16:
+      description: VGG16 model for skin lesions classification.
+      path: best_VGG16_weights.weights.h5
+pages:
+- content: "\n                ## Welcome to the Melanoma Detection App!\n        \
+    \        This app is designed to help you understand and detect melanoma, a type\
+    \ of skin cancer. Melanoma is the most serious form of skin cancer and can be\
+    \ life-threatening if not detected and treated early.\n                \n    \
+    \            Using the latest advancements in deep learning and computer vision,\
+    \ this app provides a platform to explore different models for melanoma detection,\
+    \ visualize and analyze relevant data, and learn more about this important health\
+    \ topic.\n                \n                Key features:\n                - Model\
+    \ Selection and Performance\n                - Visualizations\n              \
+    \  - Melanoma Detection\n                - Educational Resources\n           \
+    \     - FAQs\n                - Feedback and Contact\n            "
+  function: main
+  name: Introduction
+- content: "\n                ## Model Performance\n                This section allows\
+    \ you to explore the performance of various models used for melanoma detection.\
+    \ View model summaries, evaluation metrics, confusion matrices, and ROC curves.\n\
+    \                \n                ### Features:\n                - **Model Summary**:\
+    \ Detailed summary of the selected model's architecture.\n                - **Performance\
+    \ Metrics**: Overview of accuracy, precision, recall, and AUC.\n             \
+    \   - **Confusion Matrix**: Visual representation of model performance.\n    \
+    \            - **ROC Curve**: Plot of the ROC curve for the selected model.\n\
+    \            "
+  function: model_performance_page
+  name: Model Performance
+- content: "\n                ## Visualizations\n                Interactive visualizations\
+    \ to help you understand the distribution of melanoma cases, age, and gender in\
+    \ the dataset.\n                \n                **Features:**\n            \
+    \    - Count plots for diagnostic and gender distribution\n                - Box\
+    \ plots for age distribution\n                - Interactive plots using Plotly\n\
+    \            "
+  function: visualize_data
+  name: Visualizations
+- content: "\n                ## Melanoma Detection\n                Upload your skin\
+    \ or dermoscopy images and get a prediction on whether the lesion is malignant\
+    \ or benign. This section allows you to:\n                - Choose between skin\
+    \ and dermoscopy image models\n                - Upload an image for classification\n\
+    \                - View prediction results and confidence levels\n           \
+    \     - Access additional information and disclaimers\n            "
+  function: melanoma_detection
+  name: Melanoma Detection
+- content: "\n                ## Educational Resources for Melanoma Detection\n  \
+    \              A curated list of resources to deepen your understanding of melanoma\
+    \ and the technologies used for detection.\n                \n               \
+    \ **Resources Include:**\n                - Articles and journals on melanoma\
+    \ detection\n                - Websites and databases for further reading\n  \
+    \          "
+  function: educational_resources
+  name: Educational Resources
+- content: "\n                ## Frequently Asked Questions\n                Addressing\
+    \ common questions about the Melanoma Detection App, including:\n            \
+    \    - Model accuracy\n                - Medical diagnosis trustworthiness\n \
+    \               - Image types and interpretation\n                - Data privacy\n\
+    \            "
+  function: faq_section
+  name: FAQs
+- content: "\n                ## Feedback and Contact\n                Reach out to\
+    \ us for feedback, questions, or support. Contact us at \"2adedd38@solent.ac.uk\"\
+    .\n            "
+  function: feedback_form
+  name: Feedback and Contact
+preprocessing:
+  EfficientNetB4:
+    function: preprocess_for_efficientnetb4
+  InceptionResNetV2:
+    function: preprocess_for_inceptionresnetv2
+  ResNet50:
+    function: preprocess_for_resnet50
+  VGG16:
+    function: preprocess_for_vgg16
