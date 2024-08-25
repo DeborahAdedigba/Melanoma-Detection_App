@@ -1,6 +1,6 @@
 streamlit
 numpy
-tensorflow==2.13.0
+tensorflow
 matplotlib
 pandas
 seaborn
@@ -8,3 +8,4 @@ plotly
 pyyaml
 pillow
 scikit-learn
+gdown

@@ -8,3 +8,4 @@ plotly
 pyyaml
 pillow
 scikit-learn
+gdown
