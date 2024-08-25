@@ -229,10 +229,99 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 
 
 
-import gdown
-import os
-import streamlit as st
-from tensorflow.keras.models import load_model
+# import gdown
+# import os
+# import streamlit as st
+# from tensorflow.keras.models import load_model
+
+# # Define class labels for multi-class classification
+# skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
+
+# @st.cache_resource
+# def load_models():
+#     models = {
+#         'skin': {},
+#         'derm': {}
+#     }
+
+#     # Google Drive folder ID where your models are stored
+#     folder_id = "1cPoAFhj1Y1yIPwrgsw32Lr3LFgixBb2G"
+
+#     # Function to download and load model
+#     def download_and_load_model(file_name, build_func=None, input_shape=None, num_classes=None):
+#         url = f"https://drive.google.com/uc?id={folder_id}&export=download&confirm=t&filename={file_name}"
+#         output = file_name
+#         gdown.download(url, output, quiet=False)
+        
+#         if file_name.endswith('.keras'):
+#             return load_model(output)
+#         elif file_name.endswith('.weights.h5'):
+#             if build_func:
+#                 model = build_func(input_shape=input_shape, num_classes=num_classes)
+#                 model.load_weights(output)
+#                 return model
+#             else:
+#                 st.error(f"Build function not provided for {file_name}")
+#                 return None
+
+#     # Load dermoscopy image models
+#     try:
+#         model_derm_cnn = download_and_load_model('DM_melanoma_cnn_with_saliency.keras')
+#         model_derm_vgg16 = download_and_load_model('DM_vgg16_model_with_saliency.keras')
+#         model_derm_resnet50 = download_and_load_model('DM_best_ResNet50_model.keras')
+#         model_derm_efficientnet = download_and_load_model('DM_efficientnetb4_model_with_saliency.keras')
+#         model_derm_inceptionresnetv2 = download_and_load_model('DM_InceptionResNetV2_model.keras')
+#     except Exception as e:
+#         st.error(f"Error loading dermoscopy image models: {e}")
+
+#     # Load skin image models
+#     try:
+#         model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model)
+#     except Exception as e:
+#         st.error(f"Error loading CNN skin classifier model: {e}")
+
+#     try:
+#         model_skin_vgg16 = download_and_load_model('best_VGG16_weights.weights.h5', build_model_with_saliency_Vgg, input_shape=(224, 224, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading VGG16 skin model: {e}")
+
+#     try:
+#         model_skin_resnet50 = download_and_load_model('best_ResNet50_weights.weights.h5', build_model_with_saliency_Res, input_shape=(224, 224, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading ResNet50 skin model: {e}")
+
+#     try:
+#         model_skin_efficientnet = download_and_load_model('best_EfficientNetB4_weights.weights.h5', build_model_with_saliency_Eff, input_shape=(380, 380, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading EfficientNetB4 skin model: {e}")
+
+#     try:
+#         model_skin_inceptionresnetv2 = download_and_load_model('best_InceptionResNetV2_weights.weights.h5', build_model_with_saliency_Inc, input_shape=(299, 299, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading InceptionResNetV2 skin model: {e}")
+
+#     return {
+#         'derm': {
+#             'CNN': model_derm_cnn,
+#             'VGG16': model_derm_vgg16,
+#             'ResNet50': model_derm_resnet50,
+#             'EfficientNetB4': model_derm_efficientnet,
+#             'InceptionResNetV2': model_derm_inceptionresnetv2
+#         },
+#         'skin': {
+#             'CNN': model_skin_cnn,
+#             'VGG16': model_skin_vgg16,
+#             'ResNet50': model_skin_resnet50,
+#             'EfficientNetB4': model_skin_efficientnet,
+#             'InceptionResNetV2': model_skin_inceptionresnetv2
+#         }
+#     }, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2
+
+
+# import gdown
+# import os
+# import streamlit as st
+# from tensorflow.keras.models import load_model
 
 # Define class labels for multi-class classification
 skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
@@ -244,15 +333,26 @@ def load_models():
         'derm': {}
     }
 
-    # Google Drive folder ID where your models are stored
-    folder_id = "1cPoAFhj1Y1yIPwrgsw32Lr3LFgixBb2G"
+    # Google Drive file IDs for each model
+    files = {
+        'DM_melanoma_cnn_with_saliency.keras': '14K_mzVdlE0389-z1O2PRoVEFX6KZ7nWs',
+        'DM_vgg16_model_with_saliency.keras': '1wCXdV3nhNcxcNWr0WKc7cX8kKM4vaTzt',
+        'DM_best_ResNet50_model.keras': '11rVWX0nj193MkaRA_51kqh8stmN-axj_',
+        'DM_efficientnetb4_model_with_saliency.keras': '1WByq-kIVyzfDXOdI3nH2Y6saSaHu8Evm',
+        'DM_InceptionResNetV2_model.keras': '1z60vHbKeegg0Frfb-QNhZpI-pj3KmbiD',
+        'CNN_skin_classifier_weights.weights.h5': '17jF5po5RQwrzG10Yyxj6TJBn_-hoVakE',
+        'best_VGG16_weights.weights.h5': '1iJz12SpdkSi_TVrz4rgNB4G16xhRGJgi',
+        'best_ResNet50_weights.weights.h5': '1-4MdLCmA6l30Of_ZuCO_SNpLveTClcsX',
+        'best_EfficientNetB4_weights.weights.h5': '1-0ytyTEkcPLYaOf4AGJ1VPQ5EZjPJudr',
+        'best_InceptionResNetV2_weights.weights.h5': '1WAZBPiYVCHp6Lgu_1d9bOTzterk5o5vj',
+    }
 
-    # Function to download and load model
-    def download_and_load_model(file_name, build_func=None, input_shape=None, num_classes=None):
-        url = f"https://drive.google.com/uc?id={folder_id}&export=download&confirm=t&filename={file_name}"
+    # Download and load the models
+    def download_and_load_model(file_name, file_id, build_func=None, input_shape=None, num_classes=None):
+        url = f"https://drive.google.com/uc?id={file_id}"
         output = file_name
         gdown.download(url, output, quiet=False)
-        
+
         if file_name.endswith('.keras'):
             return load_model(output)
         elif file_name.endswith('.weights.h5'):
@@ -266,37 +366,37 @@ def load_models():
 
     # Load dermoscopy image models
     try:
-        model_derm_cnn = download_and_load_model('DM_melanoma_cnn_with_saliency.keras')
-        model_derm_vgg16 = download_and_load_model('DM_vgg16_model_with_saliency.keras')
-        model_derm_resnet50 = download_and_load_model('DM_best_ResNet50_model.keras')
-        model_derm_efficientnet = download_and_load_model('DM_efficientnetb4_model_with_saliency.keras')
-        model_derm_inceptionresnetv2 = download_and_load_model('DM_InceptionResNetV2_model.keras')
+        model_derm_cnn = download_and_load_model('DM_melanoma_cnn_with_saliency.keras', files['DM_melanoma_cnn_with_saliency.keras'])
+        model_derm_vgg16 = download_and_load_model('DM_vgg16_model_with_saliency.keras', files['DM_vgg16_model_with_saliency.keras'])
+        model_derm_resnet50 = download_and_load_model('DM_best_ResNet50_model.keras', files['DM_best_ResNet50_model.keras'])
+        model_derm_efficientnet = download_and_load_model('DM_efficientnetb4_model_with_saliency.keras', files['DM_efficientnetb4_model_with_saliency.keras'])
+        model_derm_inceptionresnetv2 = download_and_load_model('DM_InceptionResNetV2_model.keras', files['DM_InceptionResNetV2_model.keras'])
     except Exception as e:
         st.error(f"Error loading dermoscopy image models: {e}")
 
     # Load skin image models
     try:
-        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model)
+        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', files['CNN_skin_classifier_weights.weights.h5'], build_model)
     except Exception as e:
         st.error(f"Error loading CNN skin classifier model: {e}")
 
     try:
-        model_skin_vgg16 = download_and_load_model('best_VGG16_weights.weights.h5', build_model_with_saliency_Vgg, input_shape=(224, 224, 6), num_classes=6)
+        model_skin_vgg16 = download_and_load_model('best_VGG16_weights.weights.h5', files['best_VGG16_weights.weights.h5'], build_model_with_saliency_Vgg, input_shape=(224, 224, 6), num_classes=6)
     except Exception as e:
         st.error(f"Error loading VGG16 skin model: {e}")
 
     try:
-        model_skin_resnet50 = download_and_load_model('best_ResNet50_weights.weights.h5', build_model_with_saliency_Res, input_shape=(224, 224, 6), num_classes=6)
+        model_skin_resnet50 = download_and_load_model('best_ResNet50_weights.weights.h5', files['best_ResNet50_weights.weights.h5'], build_model_with_saliency_Res, input_shape=(224, 224, 6), num_classes=6)
     except Exception as e:
         st.error(f"Error loading ResNet50 skin model: {e}")
 
     try:
-        model_skin_efficientnet = download_and_load_model('best_EfficientNetB4_weights.weights.h5', build_model_with_saliency_Eff, input_shape=(380, 380, 6), num_classes=6)
+        model_skin_efficientnet = download_and_load_model('best_EfficientNetB4_weights.weights.h5', files['best_EfficientNetB4_weights.weights.h5'], build_model_with_saliency_Eff, input_shape=(380, 380, 6), num_classes=6)
     except Exception as e:
         st.error(f"Error loading EfficientNetB4 skin model: {e}")
 
     try:
-        model_skin_inceptionresnetv2 = download_and_load_model('best_InceptionResNetV2_weights.weights.h5', build_model_with_saliency_Inc, input_shape=(299, 299, 6), num_classes=6)
+        model_skin_inceptionresnetv2 = download_and_load_model('best_InceptionResNetV2_weights.weights.h5', files['best_InceptionResNetV2_weights.weights.h5'], build_model_with_saliency_Inc, input_shape=(299, 299, 6), num_classes=6)
     except Exception as e:
         st.error(f"Error loading InceptionResNetV2 skin model: {e}")
 
@@ -318,83 +418,7 @@ def load_models():
     }, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2
 
 
-# # Define class labels for multi-class classification
-# skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
 
-# @st.cache_resource
-# def load_models():
-#     models = {
-#         'skin': {},
-#         'derm': {}
-#     }
-
-#     # Load dermoscopy image models
-#     try:
-#         model_derm_cnn = load_model('DM_melanoma_cnn_with_saliency.keras')
-#         model_derm_vgg16 = load_model('DM_vgg16_model_with_saliency.keras')
-#         model_derm_resnet50 = load_model('DM_best_ResNet50_model.keras')
-#         model_derm_efficientnet = load_model('DM_efficientnetb4_model_with_saliency.keras')
-#         model_derm_inceptionresnetv2 = load_model('DM_InceptionResNetV2_model.keras')
-#     except Exception as e:
-#         st.error(f"Error loading dermoscopy image models: {e}")
-
-#     # Load skin image models
-#     try:
-#         # Load the CNN model weights
-#         model_skin_cnn = build_model()
-#         model_skin_cnn.load_weights('CNN_skin_classifier_weights.weights.h5')
-#         # st.write("Loaded CNN skin classifier model.")
-#     except Exception as e:
-#         st.error(f"Error loading CNN skin classifier model: {e}")
-
-#     try:
-#         # Load the VGG16 model weights
-#         model_skin_vgg16 = build_model_with_saliency_Vgg(input_shape=(224, 224, 6), num_classes=6)
-#         model_skin_vgg16.load_weights('best_VGG16_weights.weights.h5')
-#         # st.write("VGG16 skin model loaded successfully.")
-#     except Exception as e:
-#         st.error(f"Error loading VGG16 skin model: {e}")
-
-#     try:
-#         # Load the ResNet50 model weights
-#         model_skin_resnet50 = build_model_with_saliency_Res(input_shape=(224, 224, 6), num_classes=6)
-#         model_skin_resnet50.load_weights('best_ResNet50_weights.weights.h5')
-#         # st.write("ResNet50 skin model loaded successfully.")
-#     except Exception as e:
-#         st.error(f"Error loading ResNet50 skin model: {e}")
-
-#     try:
-#         # Load the EfficientNetB4 model weights
-#         model_skin_efficientnet = build_model_with_saliency_Eff(input_shape=(380, 380, 6), num_classes=6)
-#         model_skin_efficientnet.load_weights('best_EfficientNetB4_weights.weights.h5')
-#         # st.write("EfficientNetB4 skin model loaded successfully.")
-#     except Exception as e:
-#         st.error(f"Error loading EfficientNetB4 skin model: {e}")
-
-#     try:
-#         # Load the InceptionResNetV2 model weights
-#         model_skin_inceptionresnetv2 = build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6)
-#         model_skin_inceptionresnetv2.load_weights('best_InceptionResNetV2_weights.weights.h5')
-#         # st.write("InceptionResNetV2 skin model loaded successfully.")
-#     except Exception as e:
-#         st.error(f"Error loading InceptionResNetV2 skin model: {e}")
-
-#     return {
-#         'derm': {
-#             'CNN': model_derm_cnn,
-#             'VGG16': model_derm_vgg16,
-#             'ResNet50': model_derm_resnet50,
-#             'EfficientNetB4': model_derm_efficientnet,
-#             'InceptionResNetV2': model_derm_inceptionresnetv2
-#         },
-#         'skin': {
-#             'CNN': model_skin_cnn,
-#             'VGG16': model_skin_vgg16,
-#             'ResNet50': model_skin_resnet50,
-#             'EfficientNetB4': model_skin_efficientnet,
-#             'InceptionResNetV2': model_skin_inceptionresnetv2
-#         }
-#     }, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2
 
 import streamlit as st
 import numpy as np
