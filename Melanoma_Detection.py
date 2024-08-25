@@ -70,7 +70,7 @@ st.markdown(
 
 
 # CNN
-def build_model(input_shape=(224, 224, 6)):  # 6 channels for image + saliency
+def build_model(input_shape=(224, 224, 6),num_classes=6):  # 6 channels for image + saliency
     inputs = Input(input_shape)
     image_input = inputs[:, :, :, :3]
     saliency_input = inputs[:, :, :, 3:]
@@ -114,7 +114,7 @@ def build_model(input_shape=(224, 224, 6)):  # 6 channels for image + saliency
     concatenated_features = tf.keras.layers.Concatenate()([image_features, saliency_features])
     dense1 = Dense(256, activation='relu', kernel_regularizer=l2(0.01))(concatenated_features)
     dense1 = Dropout(0.5)(dense1)
-    output = Dense(6, activation='softmax')(dense1)
+    output = Dense(num_classes, activation='softmax')(dense1)
 
     model = Model(inputs=inputs, outputs=output)
     return model
@@ -299,7 +299,7 @@ def load_models():
 
     # Load skin image models
     try:
-        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model)
+        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model, input_shape=(224, 224, 6))
         # # Load the CNN model weights
         # model_skin_cnn = build_model()
         # model_skin_cnn.load_weights('CNN_skin_classifier_weights.weights.h5')
