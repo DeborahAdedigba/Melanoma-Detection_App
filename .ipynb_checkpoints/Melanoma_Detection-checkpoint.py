@@ -299,7 +299,7 @@ def load_models():
 
     # Load skin image models
     try:
-        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model, input_shape=(224, 224, 6), num_classes=6)
+        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model, input_shape=(224, 224, 6))
         # # Load the CNN model weights
         # model_skin_cnn = build_model()
         # model_skin_cnn.load_weights('CNN_skin_classifier_weights.weights.h5')
