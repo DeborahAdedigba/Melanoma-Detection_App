@@ -21,27 +21,14 @@ import plotly.graph_objects as go
 import logging
 from typing import Dict, Tuple
 import yaml
+from PIL import Image, ImageDraw
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
 # Set page configuration
 st.set_page_config(page_title="Melanoma Detection App", page_icon="🔬", layout="wide")
 
-# # Define custom CSS for background image
-# st.markdown(
-#     """
-#     <style>
-#     .stApp {
-#         background-image: url('https://i.pinimg.com/originals/4c/98/4e/4c984ef0291409fef0a0942b391f6287.jpg');
-#         background-size: cover;
-#         background-repeat: no-repeat;
-#         background-attachment: fixed;
-#         background-position: center;
-#     }
-#     </style>
-#     """,
-#     unsafe_allow_html=True
-# )
+
 # Define custom CSS for background image and sidebar color
 st.markdown(
     """
@@ -840,8 +827,8 @@ def faq_section():
 # Feedback and contact form
 # Function to send feedback via email
 def send_email(name, email, message):
-    sender_email = "debbydawn16@gmail.com"  # Replace with your Gmail address
-    sender_password = "fcgd zzhr szgf izia"  # Replace with your app password
+    sender_email = "debbydawn16@gmail.com"  
+    sender_password = "fcgd zzhr szgf izia" 
 
     recipient_email = "debbydawn16@gmail.com"
     
@@ -899,19 +886,37 @@ def feedback_form():
             send_email(name, email, message)
             
 
+
+# Function to crop an image into a circle
+def crop_to_circle(image):
+    # Create a mask to crop the image
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.ellipse((0, 0) + image.size, fill=255)
+    
+    # Apply the mask to the image
+    result = Image.new("RGBA", image.size)
+    result.paste(image, (0, 0), mask)
+    
+    # Crop out transparent edges
+    bbox = mask.getbbox()
+    result = result.crop(bbox)
+    
+    return result
+
 # Combine all pages into a single app
 def run_app():
-    # st.set_page_config(page_title="Melanoma Detection App", page_icon="🔬", layout="wide")
     
-    # Define the image URL
-    sidebar_image_url = "https://students.solent.ac.uk/static/assets/icons/svg/logo/logo-solent.svg"
+    # Load the Melanoma logo from the local filepath
+    sidebar_image_path = "logo_2.PNG"
+    sidebar_image = Image.open(sidebar_image_path)
+    
+    # Crop the image to a circle
+    sidebar_image = crop_to_circle(sidebar_image)
 
-    # Add the image to the sidebar
-    st.sidebar.markdown(f"""
-    <div style="text-align: left;">
-        <img src="{sidebar_image_url}" alt="Solent University Logo" style="width: 100%; max-width: 200px;"/>
-    </div>
-    """, unsafe_allow_html=True)
+    # Add the circular image to the sidebar
+    st.sidebar.image(sidebar_image, use_column_width=True)
+    
     st.sidebar.title('Navigation')
     pages = {
         "Introduction": main,
