@@ -398,7 +398,7 @@ def load_models():
 
     # Load skin image models
     try:
-        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5', build_model)
+        model_skin_cnn = download_and_load_model('CNN_skin_classifier_weights.weights.h5')
     except Exception as e:
         st.error(f"Error loading CNN skin classifier model: {e}")
 
