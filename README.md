@@ -66,7 +66,8 @@ Contributions to improve the app are welcome. Please feel free to submit pull re
 
 ## License
 
-[Insert your chosen license here]
+  GNU GENERAL PUBLIC LICENSE 
+  Version 3, 29 June 2007
 
 ## Contact
 
