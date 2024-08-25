@@ -730,8 +730,8 @@ def visualize_data():
     """)
 
     # Load datasets
-    df = pd.read_csv('C:/Users/adedi/OneDrive - Solent University/Diss/Dissertation/Dataset/Source_2/metadata.csv')
-    df2 = pd.read_csv('C:/Users/adedi/OneDrive - Solent University/Diss/Dissertation/Dataset/Source_1_ISIC/ISBI2016_ISIC_Part3_Training_GroundTruth.csv')
+    df = pd.read_csv('metadata.csv')
+    df2 = pd.read_csv('ISBI2016_ISIC_Part3_Training_GroundTruth.csv')
 
     # Sidebar selection
     visualization_type = st.sidebar.selectbox('Select Visualization', ['Skin', 'Dermoscopy'])
