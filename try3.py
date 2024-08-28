@@ -341,3 +341,133 @@ def run_app():
 
 if __name__ == '__main__':
     run_app()
+
+    
+# # Define class labels for multi-class classification
+# skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
+
+# @st.cache_resource
+# def load_models():
+#     models = {
+#         'skin': {},
+#         'derm': {}
+#     }
+
+#     # Initialize model variables
+#     model_skin_cnn = None
+#     model_skin_vgg16 = None
+#     model_skin_resnet50 = None
+#     model_skin_efficientnet = None
+#     model_skin_inceptionresnetv2 = None
+    
+#     model_derm_cnn = None
+#     model_derm_vgg16 = None
+#     model_derm_resnet50 = None
+#     model_derm_efficientnet = None
+#     model_derm_inceptionresnetv2 = None
+
+#     # Google Drive file IDs
+#     files = {
+#         'DM_melanoma_cnn_with_saliency.keras': '14K_mzVdlE0389-z1O2PRoVEFX6KZ7nWs',
+#         'DM_vgg16_model_with_saliency.keras': '1wCXdV3nhNcxcNWr0WKc7cX8kKM4vaTzt',
+#         'DM_best_ResNet50_model.keras': '11rVWX0nj193MkaRA_51kqh8stmN-axj_',
+#         'DM_efficientnetb4_model_with_saliency.keras': '1WByq-kIVyzfDXOdI3nH2Y6saSaHu8Evm',
+#         'DM_InceptionResNetV2_model.keras': '1z60vHbKeegg0Frfb-QNhZpI-pj3KmbiD',
+#         'CNN_skin_classifier_weights.weights.h5': '17jF5po5RQwrzG10Yyxj6TJBn_-hoVakE',
+#         'best_VGG16_weights.weights.h5': '1iJz12SpdkSi_TVrz4rgNB4G16xhRGJgi',
+#         'best_ResNet50_weights.weights.h5': '1-4MdLCmA6l30Of_ZuCO_SNpLveTClcsX',
+#         'best_EfficientNetB4_weights.weights.h5': '1-0ytyTEkcPLYaOf4AGJ1VPQ5EZjPJudr',
+#         'best_InceptionResNetV2_weights.weights.h5': '1WAZBPiYVCHp6Lgu_1d9bOTzterk5o5vj',
+#     }
+
+#     # Function to download and load model
+#     def download_and_load_model(file_name, build_func=None, input_shape=None, num_classes=None):
+#         url = f"https://drive.google.com/uc?id={files[file_name]}&export=download"
+#         output = file_name
+#         gdown.download(url, output, quiet=False)
+
+#         if file_name.endswith('.keras'):
+#             return load_model(output)
+#         elif file_name.endswith('.weights.h5'):
+#             if build_func:
+#                 model = build_func(input_shape=input_shape, num_classes=num_classes)
+#                 model.load_weights(output)
+#                 return model
+#             else:
+#                 st.error(f"Build function not provided for {file_name}")
+#                 return None
+
+#     # Load dermoscopy image models
+#     try:
+#         model_derm_cnn = download_and_load_model('DM_melanoma_cnn_with_saliency.keras')
+#         model_derm_vgg16 = download_and_load_model('DM_vgg16_model_with_saliency.keras')
+#         model_derm_resnet50 = download_and_load_model('DM_best_ResNet50_model.keras')
+#         model_derm_efficientnet = download_and_load_model('DM_efficientnetb4_model_with_saliency.keras')
+#         model_derm_inceptionresnetv2 = download_and_load_model('DM_InceptionResNetV2_model.keras')
+#     except Exception as e:
+#         st.error(f"Error loading dermoscopy image models: {e}")
+
+#     # Load skin image models
+#     failed_models = []
+
+#     # Set up logging
+#     logging.basicConfig(level=logging.INFO)
+#     logger = logging.getLogger(__name__)
+
+#     # CNN model for skin images
+#     try:
+#         logger.info("Attempting to download CNN model for skin images...")
+#         url = "https://drive.google.com/uc?id=17jF5po5RQwrzG10Yyxj6TJBn_-hoVakE&export=download"
+#         output = "CNN_skin_classifier_weights.weights.h5"
+#         gdown.download(url, output, quiet=False)
+        
+#         logger.info("Building CNN model...")
+#         model_skin_cnn = build_model(input_shape=(224, 224, 6))
+        
+#         logger.info("Loading weights for CNN model...")
+#         model_skin_cnn.load_weights(output)
+        
+#         models['skin']['CNN'] = model_skin_cnn
+#         logger.info("CNN model for skin images loaded successfully.")
+#     except Exception as e:
+#         logger.error(f"Failed to load CNN model for skin images: {str(e)}")
+#         failed_models.append("skin_CNN")
+
+
+
+#     try:
+#         model_skin_vgg16 = download_and_load_model('best_VGG16_weights.weights.h5', build_model_with_saliency_Vgg, input_shape=(224, 224, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading VGG16 skin model: {e}")
+
+#     try:
+#         model_skin_resnet50 = download_and_load_model('best_ResNet50_weights.weights.h5', build_model_with_saliency_Res, input_shape=(224, 224, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading ResNet50 skin model: {e}")
+
+#     try:
+#         model_skin_efficientnet = download_and_load_model('best_EfficientNetB4_weights.weights.h5', build_model_with_saliency_Eff, input_shape=(380, 380, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading EfficientNetB4 skin model: {e}")
+
+#     try:
+#         model_skin_inceptionresnetv2 = download_and_load_model('best_InceptionResNetV2_weights.weights.h5', build_model_with_saliency_Inc, input_shape=(299, 299, 6), num_classes=6)
+#     except Exception as e:
+#         st.error(f"Error loading InceptionResNetV2 skin model: {e}")
+
+#     return {
+#         'derm': {
+#             'CNN': model_derm_cnn,
+#             'VGG16': model_derm_vgg16,
+#             'ResNet50': model_derm_resnet50,
+#             'EfficientNetB4': model_derm_efficientnet,
+#             'InceptionResNetV2': model_derm_inceptionresnetv2
+#         },
+#         'skin': {
+#             'CNN': model_skin_cnn,
+#             'VGG16': model_skin_vgg16,
+#             'ResNet50': model_skin_resnet50,
+#             'EfficientNetB4': model_skin_efficientnet,
+#             'InceptionResNetV2': model_skin_inceptionresnetv2
+#         }
+#     }, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2
