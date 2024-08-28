@@ -772,9 +772,9 @@ def plot_roc_curve(model, model_name, num_classes, input_size):
 
 
 def model_performance_page():
-    if 'models' not in st.session_state:
-        loaded_data = load_models()
-        st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
+    # if 'models' not in st.session_state:
+    #     loaded_data = load_models()
+    #     st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
         
     st.title("Model Performance")
     st.markdown("This section allows you to explore the performance of various models used for melanoma detection. You can view the model summaries, evaluation metrics, and confusion matrices.")
