@@ -260,7 +260,7 @@ def get_model_loaders():
 def get_cached_model_loaders():
     return get_model_loaders()
 
-@st.cache_resource
+
 def load_specific_model(model_type, model_name):
     model_loaders = get_cached_model_loaders()
     try:
@@ -269,6 +269,9 @@ def load_specific_model(model_type, model_name):
     except Exception as e:
         st.error(f"Error loading {model_type} - {model_name} model: {e}")
         return None
+    
+    
+
 
 # # Define class labels for multi-class classification
 # skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
@@ -772,9 +775,9 @@ def plot_roc_curve(model, model_name, num_classes, input_size):
 
 
 def model_performance_page():
-    # if 'models' not in st.session_state:
-    #     loaded_data = load_models()
-    #     st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
+    if 'models' not in st.session_state:
+        loaded_data = load_models()
+        st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
         
     st.title("Model Performance")
     st.markdown("This section allows you to explore the performance of various models used for melanoma detection. You can view the model summaries, evaluation metrics, and confusion matrices.")
