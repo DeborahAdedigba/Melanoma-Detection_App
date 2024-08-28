@@ -260,7 +260,7 @@ def get_model_loaders():
 def get_cached_model_loaders():
     return get_model_loaders()
 
-
+@st.cache_resource
 def load_specific_model(model_type, model_name):
     model_loaders = get_cached_model_loaders()
     try:
