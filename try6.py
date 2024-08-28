@@ -771,60 +771,11 @@ def plot_roc_curve(model, model_name, num_classes, input_size):
 
 
 
-# def model_performance_page():
-#     if 'models' not in st.session_state:
-#         loaded_data = load_models()
-#         st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
-        
-#     st.title("Model Performance")
-#     st.markdown("This section allows you to explore the performance of various models used for melanoma detection. You can view the model summaries, evaluation metrics, and confusion matrices.")
-    
-#     metrics_dermoscopy = {
-#         'CNN': {'Accuracy': '53%', 'Precision': '53%', 'Recall': '53%', 'AUC': '52%'},
-#         'VGG16': {'Accuracy': '74%', 'Precision': '74%', 'Recall': '74%', 'AUC': '83%'},
-#         'ResNet50': {'Accuracy': '75%', 'Precision': '75%', 'Recall': '75%', 'AUC': '84%'},
-#         'EfficientNetB4': {'Accuracy': '85%', 'Precision': '85%', 'Recall': '85%', 'AUC': '95%'},
-#         'InceptionResNetV2': {'Accuracy': '60%', 'Precision': '60%', 'Recall': '60%', 'AUC': '64%'}
-#     }
-#     metrics_skin = {
-#         'CNN': {'Accuracy': '75%', 'Precision': '95%', 'Recall': '44%', 'AUC': '96%'},
-#         'VGG16': {'Accuracy': '74%', 'Precision': '82%', 'Recall': '66%', 'AUC': '95%'},
-#         'ResNet50': {'Accuracy': '79%', 'Precision': '84%', 'Recall': '76%', 'AUC': '97%'},
-#         'EfficientNetB4': {'Accuracy': '61%', 'Precision': '70%', 'Recall': '50%', 'AUC': '89%'},
-#         'InceptionResNetV2': {'Accuracy': '57%', 'Precision': '95%', 'Recall': '44%', 'AUC': '96%'}
-#     }
-    
-#     model_descriptions = {
-#         'CNN': "A custom Convolutional Neural Network designed for this specific task.",
-#         'VGG16': "A deep CNN known for its simplicity and effectiveness in image classification.",
-#         'ResNet50': "A deep residual network that addresses the vanishing gradient problem.",
-#         'EfficientNetB4': "A network that balances network depth, width, and resolution for improved efficiency.",
-#         'InceptionResNetV2': "Combines the Inception architecture with residual connections for enhanced performance."
-#     }
-
-    
-
-#     # Model selection
-#     model_type = st.sidebar.selectbox('Select Model Type', ['Skin Image Models', 'Dermoscopy Image Models'])
-#     metrics = metrics_skin if model_type == 'Skin Image Models' else metrics_dermoscopy
-#     model_name = st.sidebar.selectbox('Select Model', list(metrics.keys()), 
-#                                       help="Choose a model to view its performance metrics and details.")
-    
-#     st.sidebar.markdown(f"**Model Description:**\n{model_descriptions[model_name]}")
-
-#     # Create tabs
-#     tab1, tab2, tab3, tab4 = st.tabs(["Model Summary", "Performance Metrics", "Confusion Matrix", "ROC Curve"])
-
-#     with tab1:
-#         st.header(f"{model_type} - {model_name} Model Summary")
-#         model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
-#         summary_string = StringIO()
-#         model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-#         st.text(summary_string.getvalue())
-
-
-
 def model_performance_page():
+    if 'models' not in st.session_state:
+        loaded_data = load_models()
+        st.session_state.models = loaded_data[0] if isinstance(loaded_data, tuple) else loaded_data
+        
     st.title("Model Performance")
     st.markdown("This section allows you to explore the performance of various models used for melanoma detection. You can view the model summaries, evaluation metrics, and confusion matrices.")
     
@@ -851,6 +802,8 @@ def model_performance_page():
         'InceptionResNetV2': "Combines the Inception architecture with residual connections for enhanced performance."
     }
 
+    
+
     # Model selection
     model_type = st.sidebar.selectbox('Select Model Type', ['Skin Image Models', 'Dermoscopy Image Models'])
     metrics = metrics_skin if model_type == 'Skin Image Models' else metrics_dermoscopy
@@ -864,16 +817,10 @@ def model_performance_page():
 
     with tab1:
         st.header(f"{model_type} - {model_name} Model Summary")
-        model_type_key = 'skin' if model_type == 'Skin Image Models' else 'derm'
-        model = load_specific_model(model_type_key, model_name)
-        if model:
-            summary_string = StringIO()
-            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-            st.text(summary_string.getvalue())
-        else:
-            st.error("Failed to load the model for summary.")
-
-    # ... (rest of the function remains the same)
+        model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
+        summary_string = StringIO()
+        model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+        st.text(summary_string.getvalue())
 
     with tab2:
         display_model_evaluation(metrics, model_type, model_name)
