@@ -727,7 +727,7 @@ def model_performance_page():
 def visualize_data():
     st.title('Visualizations')
     st.markdown("""
-        ## Visualizations
+        ## 
         This section provides interactive visualizations to help you understand the distribution of melanoma cases, age, and gender in the dataset.
         
         You can switch between visualizations for skin images and dermoscopy images using the sidebar selection.
