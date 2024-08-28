@@ -233,11 +233,11 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 
 
 
-@st.cache_resource
+
 # Loading Models 
 # Define class labels for multi-class classification
 skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
-
+@st.cache_resource
 def load_models():
     models = {
         'skin': {},
