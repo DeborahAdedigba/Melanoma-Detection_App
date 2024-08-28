@@ -723,7 +723,7 @@ def model_performance_page():
 
 # plotting the visualization from the metadata
 
-@st.cache_data
+
 def visualize_data():
     st.title('Visualizations')
     st.markdown("""
