@@ -233,7 +233,7 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 
 
 
-
+@st.cache_resource
 # Loading Models 
 # Define class labels for multi-class classification
 skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
@@ -723,7 +723,7 @@ def model_performance_page():
 
 # plotting the visualization from the metadata
 
-
+@st.cache_data
 def visualize_data():
     st.title('Visualizations')
     st.markdown("""
