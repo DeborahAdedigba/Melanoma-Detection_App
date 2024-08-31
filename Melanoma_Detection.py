@@ -27,6 +27,9 @@ from PIL import Image, ImageDraw
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
 import logging
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
