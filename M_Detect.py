@@ -31,6 +31,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
