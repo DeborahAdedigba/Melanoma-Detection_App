@@ -10,6 +10,7 @@ The application is deployed and accessible at: [Melanoma Detection App · Stream
 - **Multiple Model Support**: Includes various deep learning models (CNN, VGG16, ResNet50, EfficientNetB4, InceptionResNetV2) for both skin and dermoscopy image analysis.
 - **Interactive Image Upload**: Users can upload their own skin or dermoscopy images for analysis.
 - **Model Performance Metrics**: Displays detailed performance metrics including accuracy, precision, recall, and AUC for each model.
+- **Downloadable Model Summaries**: Users can view and download detailed model architecture summaries as text files for further analysis.
 - **Visualizations**: Offers interactive data visualizations to understand the distribution of melanoma cases, age, and gender in the dataset.
 - **Educational Resources**: Provides curated links to academic articles, websites, and research papers on melanoma and related technologies.
 - **FAQs Section**: Answers common questions about the app and melanoma detection.
@@ -62,6 +63,8 @@ The app uses five different neural network architectures:
 - **ResNet50**: Deep residual network architecture
 - **EfficientNetB4**: Balanced network for improved efficiency
 - **InceptionResNetV2**: Combined Inception and residual connections
+
+Each model's architecture can be examined in detail through the app interface, and summaries can be downloaded as text files for reference.
 
 ## Screenshots
 ![image](https://github.com/user-attachments/assets/e854143c-c5d1-45d3-9aef-8b95d269d45a)
