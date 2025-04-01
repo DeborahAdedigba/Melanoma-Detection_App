@@ -4,7 +4,7 @@
 This Melanoma Detection App is an interactive web application designed to assist in the detection and understanding of melanoma, a serious form of skin cancer. The app utilizes advanced deep learning models to analyze skin and dermoscopy images, providing educational resources and visualizations to enhance understanding of melanoma.
 
 ## Website
-The application is deployed and accessible at: [Melanoma Detection App · Streamlit](https://melanoma-detection.streamlit.app/)
+The application is deployed and accessible at: [Melanoma Detection App · Streamlit](https://melanoma-detection-ai.streamlit.app/)
 
 ## Features
 - **Multiple Model Support**: Includes various deep learning models (CNN, VGG16, ResNet50, EfficientNetB4, InceptionResNetV2) for both skin and dermoscopy image analysis.
