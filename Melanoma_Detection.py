@@ -362,7 +362,7 @@ def melanoma_detection():
     uploaded_file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
-        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        st.image(uploaded_file, caption='Uploaded Image.', use_container_width=True)
         st.write("")
         st.write("Classifying...")
 
@@ -479,7 +479,7 @@ def main():
     melanoma_image_url = "https://www.aimatmelanoma.org/wp-content/uploads/Blue-Greyscale-Volleyball-Quote-UAAPNCAA-Facebook-Cover.jpg"
 
     # Display the image
-    st.image(melanoma_image_url, use_column_width=True)
+    st.image(melanoma_image_url, use_container_width=True)
 
 
 
@@ -922,7 +922,7 @@ def run_app():
     sidebar_image = crop_to_circle(sidebar_image)
 
     # Add the circular image to the sidebar
-    st.sidebar.image(sidebar_image, use_column_width=True)
+    st.sidebar.image(sidebar_image, use_container_width=True)
     
     st.sidebar.title('Navigation')
     pages = {
