@@ -67,24 +67,6 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent background */
     }
 
-    /* Style for model summary tables */
-    .model-summary {
-        font-family: monospace;
-        white-space: pre;
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 5px;
-        overflow-x: auto;
-    }
-    
-    /* Style for model summary headers */
-    .model-summary-header {
-        background-color: #e9ecef;
-        padding: 8px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-    }
-
     </style>
     """,
     unsafe_allow_html=True
@@ -255,8 +237,9 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 
 
 
+
 # Loading Models 
-# Define class labels for multi-class classification
+
 skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
 @st.cache_resource
 def load_models():
@@ -334,6 +317,11 @@ def load_models():
     }, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2
 
 
+
+
+
+
+
 # Detecting Melanoma
 
 def melanoma_detection():
@@ -341,13 +329,18 @@ def melanoma_detection():
 
     # Model selection using tabs
     tab1, tab2 = st.tabs(["Skin Image Models", "Dermoscopy Image Models"])
-    
+
     # Load models (assuming this function is defined elsewhere)
     loaded_models, model_skin_cnn, model_skin_vgg16, model_skin_resnet50, model_skin_efficientnet, model_skin_inceptionresnetv2 = load_models()
+
+    # Define labels for skin images (6 classes) and dermoscopy (binary)
+    skin_labels = ['Class1', 'Class2', 'Class3', 'Class4', 'Class5', 'Class6']  # Update these with actual class names
+    derm_labels = ['Benign', 'Malignant']
 
     # Skin Image Models
     with tab1:
         st.header("Skin Image Models")
+        model_type = 'skin'
         models = ['CNN', 'VGG16', 'ResNet50', 'EfficientNetB4', 'InceptionResNetV2']
         model_dict = {
             'CNN': model_skin_cnn,
@@ -366,6 +359,7 @@ def melanoma_detection():
     # Dermoscopy Image Models
     with tab2:
         st.header("Dermoscopy Image Models")
+        model_type = 'derm'
         models = ['CNN', 'VGG16', 'ResNet50', 'EfficientNetB4', 'InceptionResNetV2']
         model_dict = loaded_models['derm']
         preprocess_dict = {
@@ -380,7 +374,7 @@ def melanoma_detection():
     uploaded_file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
-        st.image(uploaded_file, caption='Uploaded Image.', use_container_width=True)
+        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
         st.write("")
         st.write("Classifying...")
 
@@ -416,15 +410,16 @@ def melanoma_detection():
                 prediction = model.predict(combined_input)
 
                 # Handle the prediction output
-                if tab1:  
+                if model_type == 'skin':  # Multi-class output for skin images (6 classes)
                     predicted_class = np.argmax(prediction, axis=-1)
                     confidence = np.max(prediction)
-                    result = skin_labels[predicted_class[0]]
-                else:  
-                    threshold = 0.5  
+                    result = skin_labels[predicted_class[0]]  # Use skin_labels (multi-class)
+
+                elif model_type == 'derm':  # Binary output for dermoscopy images (2 classes)
+                    threshold = 0.5  # Adjust this threshold as needed
                     predicted_class = (prediction[:, 0] > threshold).astype(int)
                     confidence = prediction[0, 0]
-                    result = 'Malignant' if predicted_class[0] == 1 else 'Benign'
+                    result = derm_labels[predicted_class[0]]  # Use derm_labels (binary)
 
                 st.write(f"Prediction: {result}")
                 st.write(f"Confidence: {confidence:.2f}")
@@ -439,14 +434,16 @@ def melanoma_detection():
             st.error(f"Error during prediction: {e}")
     else:
         st.write("Please upload an image.")
+
     st.write("")    
     st.markdown(disclaimer_text_model, unsafe_allow_html=True)
     st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
-
-
-
-
+    
+    
+    
+    
+    
 # Disclaimer text
 disclaimer_text_model = """
     <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; border: 1px solid #f5c6cb;">
@@ -497,37 +494,21 @@ def main():
     melanoma_image_url = "https://www.aimatmelanoma.org/wp-content/uploads/Blue-Greyscale-Volleyball-Quote-UAAPNCAA-Facebook-Cover.jpg"
 
     # Display the image
-    st.image(melanoma_image_url, use_container_width=True)
+    st.image(melanoma_image_url, use_column_width=True)
 
 
 
 def display_model_summaries(models):
     for category, category_models in models.items():
         st.header(f"{category.capitalize()} Models")
-        st.write("This section provides a detailed summary of the selected model's architecture...")
-        
+        st.write("This section provides a detailed summary of the selected model's architecture, including the number of layers, parameters, and output shapes.")
         for model_name, model in category_models.items():
-            with st.expander(f"{model_name} Model Summary", expanded=False):
-                summary_string = StringIO()
-                model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-                
-                st.markdown(f"""
-                <div class="model-summary-header">
-                    <strong>Model:</strong> {model_name} ({category})<br>
-                    <strong>Total Params:</strong> {model.count_params():,}
-                </div>
-                <div class="model-summary">
-                    {summary_string.getvalue()}
-                </div>
-                """, unsafe_allow_html=True)
-                
-                st.download_button(
-                    label="Download Model Summary",
-                    data=summary_string.getvalue(),
-                    file_name=f"{model_name}_{category}_summary.txt",
-                    mime="text/plain"
-                )
+            st.subheader(f"{model_name} Model Summary")
+            summary_string = StringIO()
+            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+            st.text(summary_string.getvalue())
             st.markdown("---")
+
 
 # Function to display model evaluation metrics
 def display_model_evaluation(metrics, model_type, model_name):
@@ -723,32 +704,12 @@ def model_performance_page():
     # Create tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Model Summary", "Performance Metrics", "Confusion Matrix", "ROC Curve"])
 
-    with tab1:  # Model Summary tab
+    with tab1:
         st.header(f"{model_type} - {model_name} Model Summary")
         model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
-        
-        with st.expander("Show/Hide Model Summary", expanded=True):
-            summary_string = StringIO()
-            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-            
-            # Display the summary with custom styling
-            st.markdown(f"""
-            <div class="model-summary-header">
-                <strong>Model:</strong> {model_name} ({model_type})<br>
-                <strong>Total Params:</strong> {model.count_params():,}
-            </div>
-            <div class="model-summary">
-                {summary_string.getvalue()}
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Add download button for the model summary
-            st.download_button(
-                label="Download Model Summary",
-                data=summary_string.getvalue(),
-                file_name=f"{model_name}_{model_type.replace(' ', '_')}_summary.txt",
-                mime="text/plain"
-            )
+        summary_string = StringIO()
+        model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+        st.text(summary_string.getvalue())
 
     with tab2:
         display_model_evaluation(metrics, model_type, model_name)
@@ -837,7 +798,6 @@ def visualize_data():
 
 
 # Educational resources section
-
 def educational_resources():
     st.title('Educational Resources')
     st.markdown("""
@@ -848,36 +808,19 @@ def educational_resources():
         The resources include academic articles, reputable websites, scientific journals, and research papers that cover various aspects of melanoma and deep learning for medical imaging.
         
         Feel free to explore these resources to learn more about this important health topic and the latest advancements in the field.
-        
-        Below are verified, up-to-date resources about melanoma and AI detection:
     """)
 
     st.markdown("""
-    ### Medical Organizations
-    - [Skin Cancer Foundation](https://www.skincancer.org/): Authoritative resource on prevention, detection and treatment
-    - [American Academy of Dermatology](https://www.aad.org/public/diseases/skin-cancer/types/common/melanoma): Melanoma overview from dermatologists
-    - [National Cancer Institute](https://www.cancer.gov/types/skin/patient/melanoma-treatment-pdq): Official treatment information
-
-    ### Research & Datasets
-    - [ISIC Archive](https://www.isic-archive.com/): Largest public dermoscopy image collection
-    - [DermNet NZ](https://dermnetnz.org/topics/melanoma/): Clinical images and information
-    - [PH2](https://www.fc.up.pt/addi/ph2%20database.html): Public skin image database
-
-    ### Technical Papers
-    - [IEEE: Deep Learning for Melanoma Detection](https://ieeexplore.ieee.org/document/10691081)(IEEE access required)
-    - [Nature: Dermatologist-level Melanoma Classification](https://www.nature.com/articles/nature21056): 
-    - [PLOS: CNN for Melanoma Diagnosis](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1003381) - 2021 open-access study
-
-    ### Patient Resources
-    - [Melanoma Research Alliance](https://www.curemelanoma.org/): Latest research and trials
-    - [CDC Melanoma Facts](https://www.cdc.gov/skin-cancer/): Government statistics
-    - [AIM at Melanoma](https://www.aimatmelanoma.org/): Comprehensive patient guide
-    
+        - [Melanoma Detection with Deep Learning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6984940/): An academic article on using deep learning for melanoma detection.
+        - [Skin Cancer Foundation](https://www.skincancer.org/): Comprehensive resource on skin cancer, including melanoma.
+        - [Deep Learning for Dermatology](https://www.sciencedirect.com/science/article/pii/S0045653518300556): Review of deep learning techniques applied to dermatology.
+        - [Journal of the American Academy of Dermatology (JAAD)](https://www.jaad.org/): Leading dermatology journal with articles on melanoma and skin diseases.
+        - [Convolutional Neural Networks for Melanoma Detection](https://arxiv.org/abs/1805.06267): Research paper on applying CNNs for melanoma detection.
+        - [ISIC Archive](https://www.isic-archive.com/): A large dataset of dermatological images for training and evaluation of models.
+        - [Understanding Melanoma](https://www.cancer.gov/types/skin/melanoma): National Cancer Institute resource explaining melanoma and its treatment.
+        - [AI for Melanoma Detection](https://www.bmj.com/content/369/bmj.m1972): Article discussing the use of AI in detecting melanoma.
     """)
 
-    st.markdown("""
-    *Note: Some resources may require institutional access or subscriptions for full content.*
-    """)
 
 # FAQs section
 def faq_section():
@@ -994,7 +937,7 @@ def run_app():
     sidebar_image = crop_to_circle(sidebar_image)
 
     # Add the circular image to the sidebar
-    st.sidebar.image(sidebar_image, use_container_width=True)
+    st.sidebar.image(sidebar_image, use_column_width=True)
     
     st.sidebar.title('Navigation')
     pages = {
