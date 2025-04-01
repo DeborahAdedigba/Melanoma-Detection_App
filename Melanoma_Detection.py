@@ -861,7 +861,6 @@ def educational_resources():
     ### Research & Datasets
     - [ISIC Archive](https://www.isic-archive.com/): Largest public skin image collection
     - [DermNet NZ](https://dermnetnz.org/topics/melanoma/): Clinical images and information
-    - [Nature: AI in Dermatology](https://www.nature.com/articles/s41591-020-0842-1): Landmark 2020 study (Nature paywall)
 
     ### Technical Papers
     - [IEEE Melanoma Detection Review](https://ieeexplore.ieee.org/document/9336295): 2021 survey of AI methods (IEEE access required)
@@ -870,12 +869,9 @@ def educational_resources():
 
     ### Patient Resources
     - [Melanoma Research Alliance](https://www.curemelanoma.org/): Latest research and trials
-    - [CDC Melanoma Facts](https://www.cdc.gov/cancer/skin/basic_info/melanoma.htm): Government statistics
+    - [CDC Melanoma Facts](https://www.cdc.gov/skin-cancer/): Government statistics
     - [AIM at Melanoma](https://www.aimatmelanoma.org/): Comprehensive patient guide
-
-    ### Open Courses
-    - [Stanford ML for Healthcare](https://online.stanford.edu/courses/cs342-artificial-intelligence-healthcare): Includes dermatology applications
-    - [DeepLearning.AI Medical AI](https://www.deeplearning.ai/courses/ai-for-medicine/): Practical AI implementation
+    
     """)
 
     st.markdown("""
