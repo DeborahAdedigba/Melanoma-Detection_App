@@ -837,6 +837,7 @@ def visualize_data():
 
 
 # Educational resources section
+
 def educational_resources():
     st.title('Educational Resources')
     st.markdown("""
@@ -847,19 +848,39 @@ def educational_resources():
         The resources include academic articles, reputable websites, scientific journals, and research papers that cover various aspects of melanoma and deep learning for medical imaging.
         
         Feel free to explore these resources to learn more about this important health topic and the latest advancements in the field.
+        
+        Below are verified, up-to-date resources about melanoma and AI detection:
     """)
 
     st.markdown("""
-        - [Melanoma Detection with Deep Learning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6984940/): An academic article on using deep learning for melanoma detection.
-        - [Skin Cancer Foundation](https://www.skincancer.org/): Comprehensive resource on skin cancer, including melanoma.
-        - [Deep Learning for Dermatology](https://www.sciencedirect.com/science/article/pii/S0045653518300556): Review of deep learning techniques applied to dermatology.
-        - [Journal of the American Academy of Dermatology (JAAD)](https://www.jaad.org/): Leading dermatology journal with articles on melanoma and skin diseases.
-        - [Convolutional Neural Networks for Melanoma Detection](https://arxiv.org/abs/1805.06267): Research paper on applying CNNs for melanoma detection.
-        - [ISIC Archive](https://www.isic-archive.com/): A large dataset of dermatological images for training and evaluation of models.
-        - [Understanding Melanoma](https://www.cancer.gov/types/skin/melanoma): National Cancer Institute resource explaining melanoma and its treatment.
-        - [AI for Melanoma Detection](https://www.bmj.com/content/369/bmj.m1972): Article discussing the use of AI in detecting melanoma.
+    ### Medical Organizations
+    - [Skin Cancer Foundation](https://www.skincancer.org/): Authoritative resource on prevention, detection and treatment
+    - [American Academy of Dermatology](https://www.aad.org/public/diseases/skin-cancer/types/common/melanoma): Melanoma overview from dermatologists
+    - [National Cancer Institute](https://www.cancer.gov/types/skin/patient/melanoma-treatment-pdq): Official treatment information
+
+    ### Research & Datasets
+    - [ISIC Archive](https://www.isic-archive.com/): Largest public skin image collection
+    - [DermNet NZ](https://dermnetnz.org/topics/melanoma/): Clinical images and information
+    - [Nature: AI in Dermatology](https://www.nature.com/articles/s41591-020-0842-1): Landmark 2020 study (Nature paywall)
+
+    ### Technical Papers
+    - [IEEE Melanoma Detection Review](https://ieeexplore.ieee.org/document/9336295): 2021 survey of AI methods (IEEE access required)
+    - [CNN for Skin Lesions (Open Access)](https://www.mdpi.com/2075-4418/11/8/1396): 2021 MDPI paper
+    - [ARXIV: Deep Learning Survey](https://arxiv.org/abs/2301.00896): 2023 technical review
+
+    ### Patient Resources
+    - [Melanoma Research Alliance](https://www.curemelanoma.org/): Latest research and trials
+    - [CDC Melanoma Facts](https://www.cdc.gov/cancer/skin/basic_info/melanoma.htm): Government statistics
+    - [AIM at Melanoma](https://www.aimatmelanoma.org/): Comprehensive patient guide
+
+    ### Open Courses
+    - [Stanford ML for Healthcare](https://online.stanford.edu/courses/cs342-artificial-intelligence-healthcare): Includes dermatology applications
+    - [DeepLearning.AI Medical AI](https://www.deeplearning.ai/courses/ai-for-medicine/): Practical AI implementation
     """)
 
+    st.markdown("""
+    *Note: Some resources may require institutional access or subscriptions for full content.*
+    """)
 
 # FAQs section
 def faq_section():
