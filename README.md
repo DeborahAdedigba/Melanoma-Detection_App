@@ -38,7 +38,7 @@ The application is deployed and accessible at: [Melanoma Detection App · Stream
    ```
 4. Run the Streamlit app:
    ```bash
-   streamlit run app.py
+   streamlit run Melanoma_Detection.py
    ```
 
 ## Usage
