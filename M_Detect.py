@@ -32,7 +32,11 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+logging.getLogger('tensorflow').setLevel(logging.ERROR) 
+
+# Add this before loading any models
+tf.config.set_visible_devices([], 'GPU')  # Disable GPU entirely
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -254,8 +258,16 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 # Loading Models 
 # Define class labels for multi-class classification
 skin_labels = ['ACK', 'BCC', 'MEL', 'NEV', 'SCC', 'SEK']
-@st.cache_resource
+@st.cache_resource(show_spinner="Loading melanoma detection models...")
 def load_models():
+    # Add this to prevent TensorFlow from allocating all memory
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+        except RuntimeError as e:
+            print(e)
     models = {
         'skin': {},
         'derm': {}
