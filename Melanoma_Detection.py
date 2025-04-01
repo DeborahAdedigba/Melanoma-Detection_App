@@ -67,6 +67,24 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent background */
     }
 
+    /* Style for model summary tables */
+    .model-summary {
+        font-family: monospace;
+        white-space: pre;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+    
+    /* Style for model summary headers */
+    .model-summary-header {
+        background-color: #e9ecef;
+        padding: 8px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
     </style>
     """,
     unsafe_allow_html=True
@@ -486,14 +504,30 @@ def main():
 def display_model_summaries(models):
     for category, category_models in models.items():
         st.header(f"{category.capitalize()} Models")
-        st.write("This section provides a detailed summary of the selected model's architecture, including the number of layers, parameters, and output shapes.")
+        st.write("This section provides a detailed summary of the selected model's architecture...")
+        
         for model_name, model in category_models.items():
-            st.subheader(f"{model_name} Model Summary")
-            summary_string = StringIO()
-            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-            st.text(summary_string.getvalue())
+            with st.expander(f"{model_name} Model Summary", expanded=False):
+                summary_string = StringIO()
+                model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+                
+                st.markdown(f"""
+                <div class="model-summary-header">
+                    <strong>Model:</strong> {model_name} ({category})<br>
+                    <strong>Total Params:</strong> {model.count_params():,}
+                </div>
+                <div class="model-summary">
+                    {summary_string.getvalue()}
+                </div>
+                """, unsafe_allow_html=True)
+                
+                st.download_button(
+                    label="Download Model Summary",
+                    data=summary_string.getvalue(),
+                    file_name=f"{model_name}_{category}_summary.txt",
+                    mime="text/plain"
+                )
             st.markdown("---")
-
 
 # Function to display model evaluation metrics
 def display_model_evaluation(metrics, model_type, model_name):
@@ -689,12 +723,28 @@ def model_performance_page():
     # Create tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Model Summary", "Performance Metrics", "Confusion Matrix", "ROC Curve"])
 
-    with tab1:
+    with tab1:  # Model Summary tab
         st.header(f"{model_type} - {model_name} Model Summary")
-        model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
-        summary_string = StringIO()
-        model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-        st.text(summary_string.getvalue())
+        with st.expander("Show/Hide Model Summary", expanded=True):
+            summary_string = StringIO()
+            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+            
+            st.markdown(f"""
+            <div class="model-summary-header">
+                <strong>Model:</strong> {model_name} ({model_type})<br>
+                <strong>Total Params:</strong> {model.count_params():,}
+            </div>
+            <div class="model-summary">
+                {summary_string.getvalue()}
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.download_button(
+                label="Download Model Summary",
+                data=summary_string.getvalue(),
+                file_name=f"{model_name}_summary.txt",
+                mime="text/plain"
+            )
 
     with tab2:
         display_model_evaluation(metrics, model_type, model_name)
