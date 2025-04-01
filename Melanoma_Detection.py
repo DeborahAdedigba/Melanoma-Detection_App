@@ -725,10 +725,13 @@ def model_performance_page():
 
     with tab1:  # Model Summary tab
         st.header(f"{model_type} - {model_name} Model Summary")
+        model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
+        
         with st.expander("Show/Hide Model Summary", expanded=True):
             summary_string = StringIO()
             model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
             
+            # Display the summary with custom styling
             st.markdown(f"""
             <div class="model-summary-header">
                 <strong>Model:</strong> {model_name} ({model_type})<br>
@@ -739,10 +742,11 @@ def model_performance_page():
             </div>
             """, unsafe_allow_html=True)
             
+            # Add download button for the model summary
             st.download_button(
                 label="Download Model Summary",
                 data=summary_string.getvalue(),
-                file_name=f"{model_name}_summary.txt",
+                file_name=f"{model_name}_{model_type.replace(' ', '_')}_summary.txt",
                 mime="text/plain"
             )
 
