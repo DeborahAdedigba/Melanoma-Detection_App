@@ -67,6 +67,24 @@ st.markdown(
         background-color: rgba(255, 255, 255, 0.8) !important; /* Semi-transparent background */
     }
 
+    /* Style for model summary tables */
+    .model-summary {
+        font-family: monospace;
+        white-space: pre;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+    }
+    
+    /* Style for model summary headers */
+    .model-summary-header {
+        background-color: #e9ecef;
+        padding: 8px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
     </style>
     """,
     unsafe_allow_html=True
@@ -150,8 +168,6 @@ def build_model_with_saliency_Eff(input_shape=(380, 380, 6), num_classes=6):
     return model
 
 # VGG16
-
-
 def build_model_with_saliency_Vgg(input_shape=(224, 224, 6), weights_path=None, num_classes=6):
     base_model = VGG16(include_top=False, weights=None, input_shape=(224, 224, 3))
     if weights_path is not None:
@@ -207,8 +223,6 @@ def build_model_with_saliency_Res(input_shape=(224, 224, 6), num_classes=6):
     return model
 
 # InceptionResNetV2
-
-
 def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
     base_model = InceptionResNetV2(include_top=False, weights=None, input_shape=(299, 299, 3))
 
@@ -233,9 +247,6 @@ def build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6):
 
     model = Model(inputs=inputs, outputs=output)
     return model
-
-
-
 
 # Loading Models 
 # Define class labels for multi-class classification
@@ -262,7 +273,6 @@ def load_models():
         # Load the CNN model weights
         model_skin_cnn = build_model()
         model_skin_cnn.load_weights('CNN_skin_classifier_weights.weights.h5')
-        # st.write("Loaded CNN skin classifier model.")
     except Exception as e:
         st.error(f"Error loading CNN skin classifier model: {e}")
 
@@ -270,7 +280,6 @@ def load_models():
         # Load the VGG16 model weights
         model_skin_vgg16 = build_model_with_saliency_Vgg(input_shape=(224, 224, 6), num_classes=6)
         model_skin_vgg16.load_weights('best_VGG16_weights.weights.h5')
-        # st.write("VGG16 skin model loaded successfully.")
     except Exception as e:
         st.error(f"Error loading VGG16 skin model: {e}")
 
@@ -278,7 +287,6 @@ def load_models():
         # Load the ResNet50 model weights
         model_skin_resnet50 = build_model_with_saliency_Res(input_shape=(224, 224, 6), num_classes=6)
         model_skin_resnet50.load_weights('best_ResNet50_weights.weights.h5')
-        # st.write("ResNet50 skin model loaded successfully.")
     except Exception as e:
         st.error(f"Error loading ResNet50 skin model: {e}")
 
@@ -286,7 +294,6 @@ def load_models():
         # Load the EfficientNetB4 model weights
         model_skin_efficientnet = build_model_with_saliency_Eff(input_shape=(380, 380, 6), num_classes=6)
         model_skin_efficientnet.load_weights('best_EfficientNetB4_weights.weights.h5')
-        # st.write("EfficientNetB4 skin model loaded successfully.")
     except Exception as e:
         st.error(f"Error loading EfficientNetB4 skin model: {e}")
 
@@ -294,7 +301,6 @@ def load_models():
         # Load the InceptionResNetV2 model weights
         model_skin_inceptionresnetv2 = build_model_with_saliency_Inc(input_shape=(299, 299, 6), num_classes=6)
         model_skin_inceptionresnetv2.load_weights('best_InceptionResNetV2_weights.weights.h5')
-        # st.write("InceptionResNetV2 skin model loaded successfully.")
     except Exception as e:
         st.error(f"Error loading InceptionResNetV2 skin model: {e}")
 
@@ -317,7 +323,6 @@ def load_models():
 
 
 # Detecting Melanoma
-
 def melanoma_detection():
     st.title('Melanoma Detection')
 
@@ -362,7 +367,7 @@ def melanoma_detection():
     uploaded_file = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
-        st.image(uploaded_file, caption='Uploaded Image.', use_column_width=True)
+        st.image(uploaded_file, caption='Uploaded Image.', use_container_width=True)  # Changed to use_container_width
         st.write("")
         st.write("Classifying...")
 
@@ -425,10 +430,6 @@ def melanoma_detection():
     st.markdown(disclaimer_text_model, unsafe_allow_html=True)
     st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
-
-
-
-
 # Disclaimer text
 disclaimer_text_model = """
     <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; border: 1px solid #f5c6cb;">
@@ -479,9 +480,7 @@ def main():
     melanoma_image_url = "https://www.aimatmelanoma.org/wp-content/uploads/Blue-Greyscale-Volleyball-Quote-UAAPNCAA-Facebook-Cover.jpg"
 
     # Display the image
-    st.image(melanoma_image_url, use_column_width=True)
-
-
+    st.image(melanoma_image_url, use_container_width=True)  # Changed to use_container_width
 
 def display_model_summaries(models):
     for category, category_models in models.items():
@@ -489,25 +488,52 @@ def display_model_summaries(models):
         st.write("This section provides a detailed summary of the selected model's architecture, including the number of layers, parameters, and output shapes.")
         for model_name, model in category_models.items():
             st.subheader(f"{model_name} Model Summary")
-            summary_string = StringIO()
-            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-            st.text(summary_string.getvalue())
+            with st.expander("Show/Hide Model Summary"):
+                summary_string = StringIO()
+                model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+                
+                # Display the summary with custom styling
+                st.markdown(f"""
+                <div class="model-summary-header">
+                    <strong>Model:</strong> {model_name} ({category})<br>
+                    <strong>Total Params:</strong> {model.count_params():,}
+                </div>
+                <div class="model-summary">
+                    {summary_string.getvalue()}
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # Add download button for the model summary
+                st.download_button(
+                    label="Download Model Summary",
+                    data=summary_string.getvalue(),
+                    file_name=f"{model_name}_{category}_summary.txt",
+                    mime="text/plain"
+                )
             st.markdown("---")
 
-
-# Function to display model evaluation metrics
 def display_model_evaluation(metrics, model_type, model_name):
     if model_name in metrics:
         st.write(f"### Model Performance for {model_name} ({model_type})")
         st.write("The following metrics provide an overview of the selected model's performance:")
-        st.write(f"**Accuracy**: {metrics[model_name]['Accuracy']}")
-        st.write(f"**Precision**: {metrics[model_name]['Precision']}")
-        st.write(f"**Recall**: {metrics[model_name]['Recall']}")
-        st.write(f"**AUC**: {metrics[model_name]['AUC']}")
+        
+        # Create a DataFrame for better display
+        metrics_df = pd.DataFrame.from_dict(metrics[model_name], orient='index', columns=['Value'])
+        st.table(metrics_df)
+        
+        # Add visual indicators
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Accuracy", metrics[model_name]['Accuracy'])
+        with col2:
+            st.metric("Precision", metrics[model_name]['Precision'])
+        with col3:
+            st.metric("Recall", metrics[model_name]['Recall'])
+        with col4:
+            st.metric("AUC", metrics[model_name]['AUC'])
     else:
         st.write("Metrics not available.")
 
-# Function to display confusion matrix
 def display_confusion_matrix(confusion_matrices, model_type, model_name):
     matrix = confusion_matrices.get(model_type, {}).get(model_name)
     if matrix is not None:
@@ -544,6 +570,7 @@ def display_confusion_matrix(confusion_matrices, model_type, model_name):
         st.write(f"The diagonal elements represent the number of correct predictions, while the off-diagonals represent the number of incorrect predictions.")
     else:
         st.write(f"No confusion matrix available for {model_name} in {model_type}.")
+
 # Confusion matrices for models
 confusion_matrices = {
     'dermoscopy': {
@@ -599,11 +626,29 @@ def display_selected_model_summary(models):
     
     st.header(f"{image_type} - {model_name} Model Summary")
     model = models[model_key][model_name]
-    summary_string = StringIO()
-    model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-    st.text(summary_string.getvalue())
-
-
+    
+    with st.expander("Show/Hide Model Summary", expanded=True):
+        summary_string = StringIO()
+        model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+        
+        # Display the summary with custom styling
+        st.markdown(f"""
+        <div class="model-summary-header">
+            <strong>Model:</strong> {model_name} ({image_type})<br>
+            <strong>Total Params:</strong> {model.count_params():,}
+        </div>
+        <div class="model-summary">
+            {summary_string.getvalue()}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Add download button for the model summary
+        st.download_button(
+            label="Download Model Summary",
+            data=summary_string.getvalue(),
+            file_name=f"{model_name}_{image_type}_summary.txt",
+            mime="text/plain"
+        )
 
 def plot_roc_curve(model, model_name, num_classes, input_size):
     # Generate random sample data with the correct input size
@@ -626,10 +671,10 @@ def plot_roc_curve(model, model_name, num_classes, input_size):
     fig = go.Figure()
     for i in range(num_classes):
         fig.add_trace(go.Scatter(x=fpr[i], y=tpr[i], 
-                                 name=f'Class {i} (AUC = {roc_auc[i]:.2f})'))
+                         name=f'Class {i} (AUC = {roc_auc[i]:.2f})'))
     
     fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', 
-                             line=dict(dash='dash'), name='Random Classifier'))
+                         line=dict(dash='dash'), name='Random Classifier'))
     
     fig.update_layout(
         title=f'ROC Curve - {model_name}',
@@ -641,9 +686,6 @@ def plot_roc_curve(model, model_name, num_classes, input_size):
         margin=dict(r=200)  
     )
     return fig
-
-
-
 
 def model_performance_page():
     if 'models' not in st.session_state:
@@ -676,8 +718,6 @@ def model_performance_page():
         'InceptionResNetV2': "Combines the Inception architecture with residual connections for enhanced performance."
     }
 
-    
-
     # Model selection
     model_type = st.sidebar.selectbox('Select Model Type', ['Skin Image Models', 'Dermoscopy Image Models'])
     metrics = metrics_skin if model_type == 'Skin Image Models' else metrics_dermoscopy
@@ -692,9 +732,29 @@ def model_performance_page():
     with tab1:
         st.header(f"{model_type} - {model_name} Model Summary")
         model = st.session_state.models['skin' if model_type == 'Skin Image Models' else 'derm'][model_name]
-        summary_string = StringIO()
-        model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
-        st.text(summary_string.getvalue())
+        
+        with st.expander("Show/Hide Model Summary", expanded=True):
+            summary_string = StringIO()
+            model.summary(print_fn=lambda x: summary_string.write(x + '\n'))
+            
+            # Display the summary with custom styling
+            st.markdown(f"""
+            <div class="model-summary-header">
+                <strong>Model:</strong> {model_name} ({model_type})<br>
+                <strong>Total Params:</strong> {model.count_params():,}
+            </div>
+            <div class="model-summary">
+                {summary_string.getvalue()}
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add download button for the model summary
+            st.download_button(
+                label="Download Model Summary",
+                data=summary_string.getvalue(),
+                file_name=f"{model_name}_{model_type.replace(' ', '_')}_summary.txt",
+                mime="text/plain"
+            )
 
     with tab2:
         display_model_evaluation(metrics, model_type, model_name)
@@ -721,12 +781,7 @@ def model_performance_page():
         
     st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
-
-
-
 # plotting the visualization from the metadata
-
-
 def visualize_data():
     st.title('Visualizations')
     st.markdown("""
@@ -778,10 +833,6 @@ def visualize_data():
         
     st.sidebar.markdown(disclaimer_text, unsafe_allow_html=True)
 
-
-    
-
-
 # Educational resources section
 def educational_resources():
     st.title('Educational Resources')
@@ -805,7 +856,6 @@ def educational_resources():
         - [Understanding Melanoma](https://www.cancer.gov/types/skin/melanoma): National Cancer Institute resource explaining melanoma and its treatment.
         - [AI for Melanoma Detection](https://www.bmj.com/content/369/bmj.m1972): Article discussing the use of AI in detecting melanoma.
     """)
-
 
 # FAQs section
 def faq_section():
@@ -831,7 +881,6 @@ def faq_section():
         - A: No, your uploaded images are not stored or used for any other purpose. They are only used for the current session's classification and are not retained or shared.
     """)
 
-# Feedback and contact form
 # Function to send feedback via email
 def send_email(name, email, message):
     sender_email = "debbydawn16@gmail.com"  
@@ -891,8 +940,6 @@ def feedback_form():
             st.error("Please fill out all fields.")
         else:
             send_email(name, email, message)
-            
-
 
 # Function to crop an image into a circle
 def crop_to_circle(image):
@@ -922,7 +969,7 @@ def run_app():
     sidebar_image = crop_to_circle(sidebar_image)
 
     # Add the circular image to the sidebar
-    st.sidebar.image(sidebar_image, use_column_width=True)
+    st.sidebar.image(sidebar_image, use_container_width=True)  # Changed to use_container_width
     
     st.sidebar.title('Navigation')
     pages = {
