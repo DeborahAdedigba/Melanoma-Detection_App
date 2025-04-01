@@ -864,9 +864,9 @@ def educational_resources():
     - [PH2](https://www.fc.up.pt/addi/ph2%20database.html): Public skin image database
 
     ### Technical Papers
-    - [IEEE: Deep Learning for Melanoma Detection](https://ieeexplore.ieee.org/document/10691081)(IEEE access required)
-    - [Nature: Dermatologist-level Melanoma Classification](https://www.nature.com/articles/nature21056): 
-    - [PLOS: CNN for Melanoma Diagnosis](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1003381) - 2021 open-access study
+    - [IEEE: Deep Learning for Melanoma Detection](https://ieeexplore.ieee.org/document/10691081):(IEEE access required)
+    - [Nature: Dermatologist-level Melanoma Classification](https://www.nature.com/articles/nature21056): open-access study
+    - [PLOS: CNN for Melanoma Diagnosis](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1003381): open-access study
 
     ### Patient Resources
     - [Melanoma Research Alliance](https://www.curemelanoma.org/): Latest research and trials
